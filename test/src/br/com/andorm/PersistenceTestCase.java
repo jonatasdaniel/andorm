@@ -32,7 +32,7 @@ public class PersistenceTestCase extends AndroidTestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		
-		manager.getTransaction().rollback();
+		manager.getTransaction().end();
 		
 		manager = null;
 		System.gc();
