@@ -6,11 +6,10 @@ import java.util.Date;
 
 import br.com.andorm.AutoIncrement;
 import br.com.andorm.Column;
-import br.com.andorm.DateTime;
 import br.com.andorm.Entity;
 import br.com.andorm.PrimaryKey;
 
-@Entity("cliente")
+@Entity(tableName="cliente")
 public class Client implements Serializable {
 
 	private static final long	serialVersionUID	= 1L;
@@ -26,20 +25,11 @@ public class Client implements Serializable {
 
 	private Boolean				ativo;
 
-	@DateTime
-	@Column(name = "data_nascimento")
-	private Date				dataNascimento;
-
 	public Client() {}
 
 	public Client(String nome, String endereco) {
 		this.nome = nome;
 		this.endereco = endereco;
-	}
-
-	public Client(String nome, String endereco, Date dataNascimento) {
-		this(nome, endereco);
-		this.dataNascimento = dataNascimento;
 	}
 
 	public Integer getId() {
@@ -64,14 +54,6 @@ public class Client implements Serializable {
 
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
-	}
-
-	public Date getDataNascimento() {
-		return dataNascimento;
-	}
-
-	public void setDataNascimento(Date dataNascimento) {
-		this.dataNascimento = dataNascimento;
 	}
 
 	public Boolean getAtivo() {
