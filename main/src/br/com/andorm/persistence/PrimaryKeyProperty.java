@@ -1,10 +1,8 @@
-package br.com.andorm;
+package br.com.andorm.persistence;
 
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
-import br.com.andorm.persistence.Property;
 
 public class PrimaryKeyProperty extends Property {
 
