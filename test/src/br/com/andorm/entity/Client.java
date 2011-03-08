@@ -1,22 +1,13 @@
 package br.com.andorm.entity;
 
 
-import java.io.Serializable;
-import java.util.Date;
-
-import br.com.andorm.AutoIncrement;
-import br.com.andorm.Column;
 import br.com.andorm.Entity;
 import br.com.andorm.PrimaryKey;
 
-@Entity(tableName="cliente")
-public class Client implements Serializable {
+@Entity
+public class Client {
 
-	private static final long	serialVersionUID	= 1L;
-
-	@PrimaryKey
-	@Column(name = "codigo")
-	@AutoIncrement
+	@PrimaryKey(autoInc = true)
 	private Integer				id;
 
 	private String				nome;
@@ -27,9 +18,10 @@ public class Client implements Serializable {
 
 	public Client() {}
 
-	public Client(String nome, String endereco) {
+	public Client(String nome, String endereco, boolean ativo) {
 		this.nome = nome;
 		this.endereco = endereco;
+		this.ativo = ativo;
 	}
 
 	public Integer getId() {
@@ -63,4 +55,33 @@ public class Client implements Serializable {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj)
+			return true;
+		if(obj == null)
+			return false;
+		if(getClass() != obj.getClass())
+			return false;
+		Client other = (Client) obj;
+		if(ativo == null) {
+			if(other.ativo != null)
+				return false;
+		} else if(!ativo.equals(other.ativo))
+			return false;
+		if(endereco == null) {
+			if(other.endereco != null)
+				return false;
+		} else if(!endereco.equals(other.endereco))
+			return false;
+		if(nome == null) {
+			if(other.nome != null)
+				return false;
+		} else if(!nome.equals(other.nome))
+			return false;
+		return true;
+	}
+	
+	
 }

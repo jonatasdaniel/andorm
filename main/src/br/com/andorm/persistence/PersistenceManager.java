@@ -46,7 +46,7 @@ public interface PersistenceManager {
 	 * @param pk PK of entity to search
 	 * @return If entity was founded, return the entity, else return <code>null</code>
 	 */
-	Object get(Class<?> entityClass, Object pk);
+	<T> T get(Class<T> entityClass, Object pk);
 	
 	Transaction getTransaction();
 	

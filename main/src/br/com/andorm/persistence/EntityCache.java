@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.andorm.PrimaryKeyProperty;
-
 /**
  * 
  * @author jonatasdaniel
@@ -19,7 +17,7 @@ public final class EntityCache {
 
 	private final Class<?>			entityClass;
 	private final String			tableName;
-	private Property				pk;
+	private PrimaryKeyProperty		pk;
 
 	private List<String>			columns;
 	private List<String>			columnsWithoutAutoInc;
@@ -37,15 +35,21 @@ public final class EntityCache {
 	}
 
 	protected void setPk(PrimaryKeyProperty pk) {
-		if(!pk.isAutoInc())
-			columnsWithoutAutoInc.add(pk.getColumnName());
+		this.pk = pk;
+
 		add(pk);
 	}
-	
+
 	protected void add(Property property) {
 		columns.add(property.getColumnName());
 		columnProperties.put(property.getColumnName(), property);
 		fieldProperties.put(property.getField().getName(), property);
+
+		if(property instanceof PrimaryKeyProperty) {
+			PrimaryKeyProperty pk = (PrimaryKeyProperty) property;
+			if(!pk.isAutoInc())
+				columnsWithoutAutoInc.add(pk.getColumnName());
+		}
 	}
 
 	protected Property getPropertyByColumn(String column) {
@@ -60,12 +64,8 @@ public final class EntityCache {
 		return tableName;
 	}
 
-	protected Property getPk() {
+	protected PrimaryKeyProperty getPk() {
 		return pk;
-	}
-
-	protected void setPk(Property pk) {
-		this.pk = pk;
 	}
 
 	protected List<String> getColumns() {
@@ -74,14 +74,6 @@ public final class EntityCache {
 
 	protected List<String> getColumnsWithoutAutoInc() {
 		return columnsWithoutAutoInc;
-	}
-
-	protected Map<String, Property> getColumnProperties() {
-		return columnProperties;
-	}
-
-	protected Map<String, Property> getFieldProperties() {
-		return fieldProperties;
 	}
 
 	protected Class<?> getEntityClass() {
