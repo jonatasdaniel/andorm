@@ -1,5 +1,7 @@
 package br.com.andorm.persistence;
 
+import static br.com.andorm.utils.reflection.ReflectionUtils.in;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -12,10 +14,9 @@ import br.com.andorm.AndOrmException;
 import br.com.andorm.Column;
 import br.com.andorm.Entity;
 import br.com.andorm.PrimaryKey;
-import br.com.andorm.PrimaryKeyProperty;
 import br.com.andorm.Table;
 import br.com.andorm.Transient;
-import static br.com.andorm.utils.reflection.ReflectionUtils.in;
+import static br.com.andorm.utils.NameResolver.*;
 
 
 public final class PersistenceManagerFactory {
@@ -32,7 +33,7 @@ public final class PersistenceManagerFactory {
 			if(!clazz.isAnnotationPresent(Entity.class))
 				throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), clazz.getName()));
 			
-			String tableName = clazz.getSimpleName().toLowerCase();
+			String tableName = toUnderscoreLowerCase(clazz.getSimpleName().toLowerCase());
 			if(clazz.isAnnotationPresent(Table.class))
 				tableName = clazz.getAnnotation(Table.class).value();
 			EntityCache cache = new EntityCache(clazz, tableName);
@@ -40,7 +41,7 @@ public final class PersistenceManagerFactory {
 			for(Field field : clazz.getDeclaredFields()) {
 				if(Modifier.isStatic(field.getModifiers()) || field.isAnnotationPresent(Transient.class))
 					continue;
-				String columnName = field.getName().toLowerCase();
+				String columnName = toUnderscoreLowerCase(field.getName().toLowerCase());
 				if(field.isAnnotationPresent(Column.class))
 					columnName = field.getAnnotation(Column.class).name();
 				
