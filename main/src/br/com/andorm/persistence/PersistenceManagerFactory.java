@@ -33,7 +33,7 @@ public final class PersistenceManagerFactory {
 			if(!clazz.isAnnotationPresent(Entity.class))
 				throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), clazz.getName()));
 			
-			String tableName = toUnderscoreLowerCase(clazz.getSimpleName().toLowerCase());
+			String tableName = toUnderscoreLowerCase(clazz.getSimpleName());
 			if(clazz.isAnnotationPresent(Table.class))
 				tableName = clazz.getAnnotation(Table.class).value();
 			EntityCache cache = new EntityCache(clazz, tableName);
@@ -41,7 +41,7 @@ public final class PersistenceManagerFactory {
 			for(Field field : clazz.getDeclaredFields()) {
 				if(Modifier.isStatic(field.getModifiers()) || field.isAnnotationPresent(Transient.class))
 					continue;
-				String columnName = toUnderscoreLowerCase(field.getName().toLowerCase());
+				String columnName = toUnderscoreLowerCase(field.getName());
 				if(field.isAnnotationPresent(Column.class))
 					columnName = field.getAnnotation(Column.class).name();
 				
