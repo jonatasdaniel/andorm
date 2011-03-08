@@ -17,4 +17,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface PrimaryKey {
 
+	boolean autoInc() default false;
+	
 }

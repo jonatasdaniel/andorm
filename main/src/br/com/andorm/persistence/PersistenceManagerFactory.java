@@ -2,6 +2,7 @@ package br.com.andorm.persistence;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
@@ -10,6 +11,10 @@ import br.com.andorm.AndOrmConfiguration;
 import br.com.andorm.AndOrmException;
 import br.com.andorm.Column;
 import br.com.andorm.Entity;
+import br.com.andorm.PrimaryKey;
+import br.com.andorm.PrimaryKeyProperty;
+import br.com.andorm.Table;
+import br.com.andorm.Transient;
 import static br.com.andorm.utils.reflection.ReflectionUtils.in;
 
 
@@ -27,19 +32,29 @@ public final class PersistenceManagerFactory {
 			if(!clazz.isAnnotationPresent(Entity.class))
 				throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), clazz.getName()));
 			
-			final String tableName = clazz.getAnnotation(Entity.class).tableName();
+			String tableName = clazz.getSimpleName().toLowerCase();
+			if(clazz.isAnnotationPresent(Table.class))
+				tableName = clazz.getAnnotation(Table.class).value();
 			EntityCache cache = new EntityCache(clazz, tableName);
 			
 			for(Field field : clazz.getDeclaredFields()) {
+				if(Modifier.isStatic(field.getModifiers()) || field.isAnnotationPresent(Transient.class))
+					continue;
 				String columnName = field.getName().toLowerCase();
 				if(field.isAnnotationPresent(Column.class))
 					columnName = field.getAnnotation(Column.class).name();
 				
 				Method setMethod = in(clazz).returnSetMethodOf(field);
 				Method getMethod = in(clazz).returnGetMethodOf(field);
-				Property property = new Property(columnName, field, getMethod, setMethod);
-				
-				cache.add(property);
+				if(field.isAnnotationPresent(PrimaryKey.class)) {
+					boolean isAutoInc = field.getAnnotation(PrimaryKey.class).autoInc();
+					PrimaryKeyProperty pk = new PrimaryKeyProperty(columnName, field, getMethod, setMethod, isAutoInc);
+					cache.setPk(pk);
+				} else {
+					Property property = new Property(columnName, field, getMethod, setMethod);
+					
+					cache.add(property);
+				}
 			}
 			
 			if(cache.getPk() == null)
