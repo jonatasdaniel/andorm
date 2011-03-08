@@ -48,4 +48,7 @@ public interface PersistenceManager {
 	 */
 	Object get(Class<?> entityClass, Object pk);
 	
+	Transaction getTransaction();
+	
+	public TableManager getTableManager();
 }

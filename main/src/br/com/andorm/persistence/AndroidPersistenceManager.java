@@ -60,5 +60,10 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			transaction = new AndroidTransaction(database);
 		return transaction;
 	}
+
+	@Override
+	public TableManager getTableManager() {
+		return new TableManager(cache);
+	}
 	
 }
