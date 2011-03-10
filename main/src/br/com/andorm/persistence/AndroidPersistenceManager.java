@@ -4,11 +4,11 @@ package br.com.andorm.persistence;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import br.com.andorm.AndOrmException;
-
 import resources.ResourceBundleFactory;
-
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import br.com.andorm.AndOrmException;
+import static br.com.andorm.utils.reflection.ReflectionUtils.*;
 
 /**
  * 
@@ -40,6 +40,15 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		EntityCache cache = this.cache.getEntityCache(o.getClass());
 		if(cache == null)
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("is_not_a_entity"), o.getClass().getCanonicalName()));
+		
+		ContentValues values = new ContentValues();
+		for(String column : cache.getColumnsWithoutAutoInc()) {
+			Property property = cache.getPropertyByColumn(column);
+			Object param = invoke(o, property.getGetMethod());
+			this.cache.invokePut(values, param);
+		}
+		
+		database.insert(cache.getTableName(), null, values);
 	}
 
 	@Override
@@ -54,6 +63,19 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		EntityCache cache = this.cache.getEntityCache(o.getClass());
 		if(cache == null)
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("is_not_a_entity"), o.getClass().getCanonicalName()));
+		
+		ContentValues values = new ContentValues();
+		for(String column : cache.getColumnsWithoutAutoInc()) {
+			Property property = cache.getPropertyByColumn(column);
+			Object param = invoke(o, property.getGetMethod());
+			this.cache.invokePut(values, param);
+		}
+		
+		//alter here when change to composite primary key
+		String whereClause = cache.getPk().getColumnName().concat("=?");
+		String[] whereArgs = {invoke(o, cache.getPk().getGetMethod()).toString()};
+		
+		database.update(cache.getTableName(), values, whereClause, whereArgs);
 	}
 
 	@Override
@@ -63,10 +85,6 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), entityClass.getCanonicalName()));
 
 		return null;
-	}
-
-	protected PersistenceManagerCache getCache() {
-		return cache;
 	}
 
 	protected void setCache(PersistenceManagerCache cache) {

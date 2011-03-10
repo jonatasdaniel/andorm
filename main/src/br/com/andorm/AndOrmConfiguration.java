@@ -17,6 +17,7 @@ public class AndOrmConfiguration {
 
 	private final String databasePath;
 	private final List<Class<?>> entities;
+	
 	private final ResourceBundle bundle = ResourceBundleFactory.get();
 	
 	public AndOrmConfiguration(String databasePath) {

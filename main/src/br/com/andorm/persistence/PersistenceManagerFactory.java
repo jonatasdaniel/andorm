@@ -18,7 +18,13 @@ import br.com.andorm.Table;
 import br.com.andorm.Transient;
 import static br.com.andorm.utils.NameResolver.*;
 
-
+/**
+ * 
+ * @author jonatasdaniel
+ * @since 18/02/2011
+ * @version 0.1
+ *
+ */
 public final class PersistenceManagerFactory {
 	
 	private final static ResourceBundle bundle = ResourceBundleFactory.get();
@@ -33,17 +39,22 @@ public final class PersistenceManagerFactory {
 			if(!clazz.isAnnotationPresent(Entity.class))
 				throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), clazz.getName()));
 			
-			String tableName = toUnderscoreLowerCase(clazz.getSimpleName());
+			String tableName = null;
 			if(clazz.isAnnotationPresent(Table.class))
 				tableName = clazz.getAnnotation(Table.class).value();
+			else
+				tableName = toUnderscoreLowerCase(clazz.getSimpleName());
+			
 			EntityCache cache = new EntityCache(clazz, tableName);
 			
 			for(Field field : clazz.getDeclaredFields()) {
 				if(Modifier.isStatic(field.getModifiers()) || field.isAnnotationPresent(Transient.class))
 					continue;
-				String columnName = toUnderscoreLowerCase(field.getName());
+				String columnName = null;
 				if(field.isAnnotationPresent(Column.class))
 					columnName = field.getAnnotation(Column.class).name();
+				else
+					columnName = toUnderscoreLowerCase(field.getName());
 				
 				Method setMethod = in(clazz).returnSetMethodOf(field);
 				Method getMethod = in(clazz).returnGetMethodOf(field);
