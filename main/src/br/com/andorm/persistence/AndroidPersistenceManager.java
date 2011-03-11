@@ -20,20 +20,26 @@ import static br.com.andorm.utils.reflection.ReflectionUtils.*;
  */
 public class AndroidPersistenceManager implements PersistenceManager {
 
+	private final String databasePath;
 	private SQLiteDatabase			database;
 	private Transaction				transaction;
 	private PersistenceManagerCache	cache;
 
 	private final ResourceBundle	bundle	= ResourceBundleFactory.get();
 
+	public AndroidPersistenceManager(String databasePath) {
+		this.databasePath = databasePath;
+	}
+	
 	@Override
 	public void open() {
-
+		database = SQLiteDatabase.openOrCreateDatabase(databasePath, null);
 	}
 
 	@Override
 	public void close() {
-
+		if(database.isOpen())
+			database.close();
 	}
 
 	@Override
