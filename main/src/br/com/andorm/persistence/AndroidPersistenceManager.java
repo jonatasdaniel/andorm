@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import resources.ResourceBundleFactory;
 import android.content.ContentValues;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import br.com.andorm.AndOrmException;
 import static br.com.andorm.utils.reflection.ReflectionUtils.*;
@@ -48,7 +49,11 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			this.cache.invokePut(values, param);
 		}
 		
-		database.insert(cache.getTableName(), null, values);
+		try {
+			database.insert(cache.getTableName(), null, values);
+		} catch(SQLException e) {
+			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("save_error"), o.getClass().getCanonicalName(), e.getMessage()));
+		}
 	}
 
 	@Override
@@ -75,7 +80,11 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		String whereClause = cache.getPk().getColumnName().concat("=?");
 		String[] whereArgs = {invoke(o, cache.getPk().getGetMethod()).toString()};
 		
-		database.update(cache.getTableName(), values, whereClause, whereArgs);
+		try {
+			database.update(cache.getTableName(), values, whereClause, whereArgs);
+		} catch(SQLException e) {
+			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("save_error"), o.getClass().getCanonicalName(), e.getMessage()));
+		}
 	}
 
 	@Override
