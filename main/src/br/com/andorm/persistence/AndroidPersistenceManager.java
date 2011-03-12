@@ -1,13 +1,17 @@
 package br.com.andorm.persistence;
 
 
+import java.io.File;
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import resources.ResourceBundleFactory;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import br.com.andorm.AndOrmException;
 import static br.com.andorm.utils.reflection.ReflectionUtils.*;
 
@@ -38,7 +42,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 
 	@Override
 	public void close() {
-		if(database.isOpen())
+		if(database != null && database.isOpen())
 			database.close();
 	}
 
@@ -51,8 +55,8 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		ContentValues values = new ContentValues();
 		for(String column : cache.getColumnsWithoutAutoInc()) {
 			Property property = cache.getPropertyByColumn(column);
-			Object param = invoke(o, property.getGetMethod());
-			this.cache.invokePut(values, param);
+			Object param = invoke(o, property.getGetMethod()).withNoParams();
+			this.cache.invokePut(values, column, param);
 		}
 		
 		try {
@@ -78,8 +82,8 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		ContentValues values = new ContentValues();
 		for(String column : cache.getColumnsWithoutAutoInc()) {
 			Property property = cache.getPropertyByColumn(column);
-			Object param = invoke(o, property.getGetMethod());
-			this.cache.invokePut(values, param);
+			Object param = invoke(o, property.getGetMethod()).withNoParams();
+			this.cache.invokePut(values, column, param);
 		}
 		
 		//alter here when change to composite primary key
@@ -99,9 +103,46 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		if(cache == null)
 			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), entityClass.getCanonicalName()));
 
-		return null;
+		String selection = cache.getPk().getColumnName().concat(" =?");
+		String[] selectionArgs = {pk.toString()};
+		
+		Cursor cursor = database.query(cache.getTableName(), null, selection, selectionArgs, null, null, null);
+		
+		if(cursor.moveToFirst()) {
+			T object = newInstanceOf(entityClass);
+			inflate(cursor, object, cache);
+			return object;
+		} else
+			return null;
 	}
 
+	private void inflate(Cursor cursor, Object object, EntityCache entityCache) { 
+		for(String column : entityCache.getColumns()) {
+			int columnIndex = cursor.getColumnIndex(column);
+			
+			Property property = entityCache.getPropertyByColumn(column);
+			Method setMethod = property.getSetMethod();
+			
+			if(cursor.isNull(columnIndex)) {
+				invoke(object, setMethod).withParams(new Object[] {null});
+			} else {
+				Class<?> type = setMethod.getParameterTypes()[0];
+				Object param = cache.invokeGet(cursor, type, columnIndex);
+				invoke(object, setMethod).withParams(param);
+			}
+		}
+	}
+	
+	private <T> T newInstanceOf(Class<T> clazz) {
+		try {
+			return clazz.newInstance();
+		} catch(InstantiationException ie) {
+			throw new AndOrmException(MessageFormat.format(bundle.getString("object_creation_error"), clazz.getCanonicalName()));
+		} catch(IllegalAccessException iae) {
+			throw new AndOrmException(MessageFormat.format(bundle.getString("object_creation_error"), clazz.getCanonicalName()));
+		}
+	}
+	
 	protected void setCache(PersistenceManagerCache cache) {
 		this.cache = cache;
 	}

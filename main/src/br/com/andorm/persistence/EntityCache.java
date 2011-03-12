@@ -32,6 +32,7 @@ public final class EntityCache {
 		columns = new ArrayList<String>();
 		columnProperties = new HashMap<String, Property>();
 		fieldProperties = new HashMap<String, Property>();
+		columnsWithoutAutoInc = new ArrayList<String>();
 	}
 
 	protected void setPk(PrimaryKeyProperty pk) {
@@ -49,6 +50,8 @@ public final class EntityCache {
 			PrimaryKeyProperty pk = (PrimaryKeyProperty) property;
 			if(!pk.isAutoInc())
 				columnsWithoutAutoInc.add(pk.getColumnName());
+		} else {
+			columnsWithoutAutoInc.add(property.getColumnName());
 		}
 	}
 

@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import resources.ResourceBundleFactory;
 import br.com.andorm.AndOrmConfiguration;
 import br.com.andorm.AndOrmException;
+import br.com.andorm.AutoInc;
 import br.com.andorm.Column;
 import br.com.andorm.Entity;
 import br.com.andorm.PrimaryKey;
@@ -32,7 +33,7 @@ public final class PersistenceManagerFactory {
 	private PersistenceManagerFactory() {}
 	
 	public static PersistenceManager create(AndOrmConfiguration configuration) {
-		AndroidPersistenceManager manager = new AndroidPersistenceManager();
+		AndroidPersistenceManager manager = new AndroidPersistenceManager(configuration.getDatabasePath());
 		PersistenceManagerCache persistenceManagerCache = new PersistenceManagerCache();
 		
 		for(Class<?> clazz : configuration.getEntities()) {
@@ -59,7 +60,7 @@ public final class PersistenceManagerFactory {
 				Method setMethod = in(clazz).returnSetMethodOf(field);
 				Method getMethod = in(clazz).returnGetMethodOf(field);
 				if(field.isAnnotationPresent(PrimaryKey.class)) {
-					boolean isAutoInc = field.getAnnotation(PrimaryKey.class).autoInc();
+					boolean isAutoInc = field.isAnnotationPresent(AutoInc.class);
 					PrimaryKeyProperty pk = new PrimaryKeyProperty(columnName, field, getMethod, setMethod, isAutoInc);
 					cache.setPk(pk);
 				} else {

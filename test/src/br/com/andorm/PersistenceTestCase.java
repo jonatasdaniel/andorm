@@ -1,10 +1,9 @@
 package br.com.andorm;
 
-import br.com.andorm.AndOrmConfiguration;
-import br.com.andorm.entity.Client;
+import android.test.AndroidTestCase;
+import br.com.andorm.entity.BasicClient;
 import br.com.andorm.persistence.PersistenceManager;
 import br.com.andorm.persistence.PersistenceManagerFactory;
-import android.test.AndroidTestCase;
 
 
 public class PersistenceTestCase extends AndroidTestCase {
@@ -17,13 +16,14 @@ public class PersistenceTestCase extends AndroidTestCase {
 		
 		manager = PersistenceManagerFactory.create(configure());
 		
+		manager.open();
 		manager.getTransaction().begin();
 	}
 	
 	private AndOrmConfiguration configure() {
-		AndOrmConfiguration config = new AndOrmConfiguration("/sdcard/database.sqlite");
+		AndOrmConfiguration config = new AndOrmConfiguration("/sdcard/andorm_db_test.sqlite");
 		
-		config.addEntity(Client.class);
+		config.addEntity(BasicClient.class);
 		
 		return config;
 	}
