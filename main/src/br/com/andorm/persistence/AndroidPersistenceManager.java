@@ -1,7 +1,8 @@
 package br.com.andorm.persistence;
 
 
-import java.io.File;
+import static br.com.andorm.utils.reflection.ReflectionUtils.invoke;
+
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -11,9 +12,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import br.com.andorm.AndOrmException;
-import static br.com.andorm.utils.reflection.ReflectionUtils.*;
 
 /**
  * 
