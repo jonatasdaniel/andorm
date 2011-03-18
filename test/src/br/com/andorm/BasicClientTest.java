@@ -15,7 +15,7 @@ public class BasicClientTest extends PersistenceTestCase {
 			fail(e.getMessage());
 		}
 		
-		BasicClient readed = manager.get(BasicClient.class, 1);
+		BasicClient readed = manager.read(BasicClient.class, 1);
 		assertEquals(readed, client);
 	}
 	
@@ -28,7 +28,7 @@ public class BasicClientTest extends PersistenceTestCase {
 			fail(e.getMessage());
 		}
 		
-		BasicClient readed = manager.get(BasicClient.class, 1);
+		BasicClient readed = manager.read(BasicClient.class, 1);
 		readed.setEndereco("Other address");
 		readed.setNome("A name");
 		
@@ -38,7 +38,7 @@ public class BasicClientTest extends PersistenceTestCase {
 			fail(e.getMessage());
 		}
 		
-		client = manager.get(BasicClient.class, 1);
+		client = manager.read(BasicClient.class, 1);
 		assertEquals(client, readed);
 	}
 	
@@ -51,14 +51,14 @@ public class BasicClientTest extends PersistenceTestCase {
 			fail(e.getMessage());
 		}
 		
-		client = manager.get(BasicClient.class, 1);
+		client = manager.read(BasicClient.class, 1);
 		try {
 			manager.delete(client);
 		} catch(AndOrmPersistenceException e) {
 			fail(e.getMessage());
 		}
 		
-		assertNull(manager.get(BasicClient.class, 1));
+		assertNull(manager.read(BasicClient.class, 1));
 	}
 	
 }

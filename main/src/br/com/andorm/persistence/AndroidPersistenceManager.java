@@ -113,7 +113,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	}
 
 	@Override
-	public <T> T get(Class<T> entityClass, Object pk) {
+	public <T> T read(Class<T> entityClass, Object pk) {
 		EntityCache cache = this.cache.getEntityCache(entityClass);
 		if(cache == null)
 			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), entityClass.getCanonicalName()));
