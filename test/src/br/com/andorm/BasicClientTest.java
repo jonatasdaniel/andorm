@@ -42,4 +42,23 @@ public class BasicClientTest extends PersistenceTestCase {
 		assertEquals(client, readed);
 	}
 	
+	public void testDelete() {
+		BasicClient client = new BasicClient("Rua das palmeiras", "João da Cunha");
+		
+		try {
+			manager.save(client);
+		} catch(AndOrmPersistenceException e) {
+			fail(e.getMessage());
+		}
+		
+		client = manager.get(BasicClient.class, 1);
+		try {
+			manager.delete(client);
+		} catch(AndOrmPersistenceException e) {
+			fail(e.getMessage());
+		}
+		
+		assertNull(manager.get(BasicClient.class, 1));
+	}
+	
 }

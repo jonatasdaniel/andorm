@@ -70,6 +70,19 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		EntityCache cache = this.cache.getEntityCache(o.getClass());
 		if(cache == null)
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("is_not_a_entity"), o.getClass().getCanonicalName()));
+		
+		//alter here when change to composite primary key
+		String whereClause = cache.getPk().getColumnName().concat("=?");
+		Object param = invoke(o, cache.getPk().getGetMethod()).withNoParams();
+		if(param == null)
+			throw new AndOrmException(MessageFormat.format(bundle.getString("id_null"), o.getClass().getCanonicalName()));
+		String[] whereArgs = {param.toString()};
+		
+		try {
+			database.delete(cache.getTableName(), whereClause, whereArgs);
+		} catch(SQLException e) {
+			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("delete_error"), o.getClass().getCanonicalName(), e.getMessage()));
+		}
 	}
 
 	@Override
@@ -87,7 +100,10 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		//alter here when change to composite primary key
 		String whereClause = cache.getPk().getColumnName().concat("=?");
-		String[] whereArgs = {invoke(o, cache.getPk().getGetMethod()).toString()};
+		Object param = invoke(o, cache.getPk().getGetMethod()).withNoParams();
+		if(param == null)
+			throw new AndOrmException(MessageFormat.format(bundle.getString("id_null"), o.getClass().getCanonicalName()));
+		String[] whereArgs = {param.toString()};
 		
 		try {
 			database.update(cache.getTableName(), values, whereClause, whereArgs);
