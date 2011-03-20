@@ -5,6 +5,8 @@ import static br.com.andorm.utils.reflection.ReflectionUtils.invoke;
 
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import resources.ResourceBundleFactory;
@@ -13,6 +15,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import br.com.andorm.AndOrmException;
+
+import com.jonatasdaniel.criteria.Criteria;
 
 /**
  * 
@@ -172,6 +176,35 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	@Override
 	public TableManager getTableManager() {
 		return new TableManager(cache);
+	}
+
+	@Override
+	public List<? extends Object> list(Criteria criteria) {
+		EntityCache cache = this.cache.getEntityCache(criteria.getClazz());
+		if(cache == null)
+			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), criteria.getClazz().getCanonicalName()));
+
+		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, cache);
+		queryBuilder.build();
+		
+		String selection = queryBuilder.whereClause();
+		String[] selectionArgs = queryBuilder.whereArgs();
+		String orderBy = queryBuilder.orderBy();
+		String groupBy = queryBuilder.groupBy();
+		String having = queryBuilder.having();
+		
+		Cursor cursor = database.query(cache.getTableName(), null, selection, selectionArgs, groupBy, having, orderBy);
+		
+		List<Object> list = new ArrayList<Object>();
+		
+		cursor.moveToFirst();
+		while(cursor.moveToNext()) {
+			Object object = newInstanceOf(criteria.getClazz());
+			inflate(cursor, object, cache);
+			list.add(object);
+		}
+		
+		return list;
 	}
 
 }

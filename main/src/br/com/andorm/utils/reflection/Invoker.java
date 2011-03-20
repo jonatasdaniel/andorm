@@ -32,7 +32,7 @@ public final class Invoker {
 		}
 	}
 	
-	public Object withNoParams() {
+	public Object withoutParams() {
 		try {
 			return method.invoke(receiver, new Object[] {});
 		} catch(InvocationTargetException e) {

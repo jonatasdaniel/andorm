@@ -1,5 +1,9 @@
 package br.com.andorm.persistence;
 
+import java.util.List;
+
+import com.jonatasdaniel.criteria.Criteria;
+
 /**
  * 
  * @author jonatasdaniel
@@ -47,6 +51,8 @@ public interface PersistenceManager {
 	 * @return If entity was founded, return the entity, else return <code>null</code>
 	 */
 	<T> T read(Class<T> entityClass, Object pk);
+	
+	public List<? extends Object> list(Criteria criteria); 
 	
 	Transaction getTransaction();
 	
