@@ -68,7 +68,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("save_error"), o.getClass().getCanonicalName(), e.getMessage()));
 		}
 	}
-
+	
 	@Override
 	public void delete(Object o) throws AndOrmPersistenceException {
 		EntityCache cache = this.cache.getEntityCache(o.getClass());
@@ -197,11 +197,12 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		List<Object> list = new ArrayList<Object>();
 		
-		cursor.moveToFirst();
-		while(cursor.moveToNext()) {
-			Object object = newInstanceOf(criteria.getClazz());
-			inflate(cursor, object, cache);
-			list.add(object);
+		if(cursor.moveToFirst()) {
+			do {
+				Object object = newInstanceOf(criteria.getClazz());
+				inflate(cursor, object, cache);
+				list.add(object);
+			} while(cursor.moveToNext());
 		}
 		
 		return list;

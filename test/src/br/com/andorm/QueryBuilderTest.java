@@ -2,7 +2,7 @@ package br.com.andorm;
 
 import static br.com.andorm.utils.reflection.ReflectionUtils.in;
 import static br.com.andorm.utils.reflection.ReflectionUtils.invoke;
-import static com.jonatasdaniel.criteria.Restriction.like;
+import static com.jonatasdaniel.criteria.Restriction.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -18,14 +18,29 @@ import com.jonatasdaniel.criteria.Criteria;
 
 public class QueryBuilderTest extends AndroidTestCase {
 	
-	public void testShouldHaveOneClause() {
+	public void testShouldHaveOneLikeClause() {
 		Criteria criteria = new Criteria(BasicClient.class);
 		criteria.where(like("nome", "joaozinho"));
 		
 		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
 		queryBuilder.build();
 		
-		assertEquals("nome =?", queryBuilder.whereClause());
+		assertEquals("nome LIKE ?", queryBuilder.whereClause());
+		assertTrue(queryBuilder.whereArgs().length == 1);
+		assertEquals("joaozinho", queryBuilder.whereArgs()[0]);
+		assertNull(queryBuilder.groupBy());
+		assertNull(queryBuilder.having());
+		assertNull(queryBuilder.orderBy());
+	}
+	
+	public void testShouldHaveOneMatchClause() {
+		Criteria criteria = new Criteria(BasicClient.class);
+		criteria.where(match("nome", "joaozinho"));
+		
+		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
+		queryBuilder.build();
+		
+		assertEquals("nome = ?", queryBuilder.whereClause());
 		assertTrue(queryBuilder.whereArgs().length == 1);
 		assertEquals("joaozinho", queryBuilder.whereArgs()[0]);
 		assertNull(queryBuilder.groupBy());

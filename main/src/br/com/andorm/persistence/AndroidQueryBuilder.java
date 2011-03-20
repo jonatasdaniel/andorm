@@ -1,6 +1,7 @@
 package br.com.andorm.persistence;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,13 +33,14 @@ public class AndroidQueryBuilder {
 	
 	public AndroidQueryBuilder build() {
 		if(criteria.hasRestriction()) {
+			comparators();
+			
 			whereClause = new StringBuilder();
 			whereArgs = new ArrayList<String>(1);
 			
 			buildRestriction(criteria.getRestriction());
 			
 			if(criteria.hasConditions()) {
-				comparators();
 				operators();
 				
 				for(Condition c : criteria.getConditions())
@@ -52,7 +54,10 @@ public class AndroidQueryBuilder {
 	private void buildRestriction(Restriction restriction) {
 		String fieldName = restriction.getField().getName();
 		String columnName = cache.getPropertyByField(fieldName).getColumnName();
-		whereClause.append(columnName).append(" =?");
+		whereClause.append(columnName);
+		whereClause.append(comparators.get(restriction.getComparator()).toString().toUpperCase());
+		whereClause.append("?");
+		//whereClause.append(columnName).append(" =?");
 		whereArgs.add(restriction.getValue().toString());
 	}
 	
@@ -71,6 +76,8 @@ public class AndroidQueryBuilder {
 	}
 	
 	private void comparators() {
+		comparators = new HashMap<LogicComparator, String>();
+		
 		comparators.put(LogicComparator.Like, " LIKE ");
 		comparators.put(LogicComparator.Equals, " = ");
 		comparators.put(LogicComparator.GreaterEqualsThan, " >= ");
@@ -82,6 +89,8 @@ public class AndroidQueryBuilder {
 	}
 	
 	private void operators() {
+		operators = new HashMap<LogicalOperator, String>();
+		
 		operators.put(LogicalOperator.And, " AND ");
 		operators.put(LogicalOperator.Or, " OR ");
 	}
