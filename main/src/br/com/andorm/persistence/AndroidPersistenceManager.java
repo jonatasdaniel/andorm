@@ -54,7 +54,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		ContentValues values = new ContentValues();
 		for(String column : cache.getColumnsWithoutAutoInc()) {
 			Property property = cache.getPropertyByColumn(column);
-			Object param = invoke(o, property.getGetMethod()).withNoParams();
+			Object param = invoke(o, property.getGetMethod()).withoutParams();
 			this.cache.invokePut(values, column, param);
 		}
 		
@@ -73,7 +73,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		//alter here when change to composite primary key
 		String whereClause = cache.getPk().getColumnName().concat("=?");
-		Object param = invoke(o, cache.getPk().getGetMethod()).withNoParams();
+		Object param = invoke(o, cache.getPk().getGetMethod()).withoutParams();
 		if(param == null)
 			throw new AndOrmException(MessageFormat.format(bundle.getString("id_null"), o.getClass().getCanonicalName()));
 		String[] whereArgs = {param.toString()};
@@ -94,13 +94,13 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		ContentValues values = new ContentValues();
 		for(String column : cache.getColumnsWithoutAutoInc()) {
 			Property property = cache.getPropertyByColumn(column);
-			Object param = invoke(o, property.getGetMethod()).withNoParams();
+			Object param = invoke(o, property.getGetMethod()).withoutParams();
 			this.cache.invokePut(values, column, param);
 		}
 		
 		//alter here when change to composite primary key
 		String whereClause = cache.getPk().getColumnName().concat("=?");
-		Object param = invoke(o, cache.getPk().getGetMethod()).withNoParams();
+		Object param = invoke(o, cache.getPk().getGetMethod()).withoutParams();
 		if(param == null)
 			throw new AndOrmException(MessageFormat.format(bundle.getString("id_null"), o.getClass().getCanonicalName()));
 		String[] whereArgs = {param.toString()};

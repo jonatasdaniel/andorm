@@ -31,7 +31,7 @@ public class ReflectionUtilsTest extends AndroidTestCase {
 		ReflectionTestClass c = new ReflectionTestClass();
 		c.setIdade(20);
 		Method method = in(c.getClass()).returnGetMethodOf("idade");
-		Integer returned = (Integer) invoke(c, method).withNoParams();
+		Integer returned = (Integer) invoke(c, method).withoutParams();
 		assertTrue(returned == 20);
 	}
 	
