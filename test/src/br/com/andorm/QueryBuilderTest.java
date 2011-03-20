@@ -35,6 +35,14 @@ public class QueryBuilderTest extends AndroidTestCase {
 	
 	private EntityCache entityCache() {
 		EntityCache cache = new EntityCache(BasicClient.class, "basic_client");
+		addIdProperty(cache);
+		addNomeProperty(cache);
+		addEnderecoProperty(cache);
+		
+		return cache;
+	}
+	
+	private void addIdProperty(EntityCache cache) {
 		Field field = in(BasicClient.class).returnField("id");
 		Method setMethod = in(BasicClient.class).returnSetMethodOf(field);
 		Method getMethod = in(BasicClient.class).returnGetMethodOf(field);
@@ -42,23 +50,26 @@ public class QueryBuilderTest extends AndroidTestCase {
 		Method setPkMethod = in(EntityCache.class).returnMethod("setPk", PrimaryKeyProperty.class);
 		setPkMethod.setAccessible(true);
 		invoke(cache, setPkMethod).withParams(prop);
-		
-		field = in(BasicClient.class).returnField("nome");
-		setMethod = in(BasicClient.class).returnSetMethodOf(field);
-		getMethod = in(BasicClient.class).returnGetMethodOf(field);
-		prop = new Property("nome", field, getMethod, setMethod);
+	}
+	
+	private void addNomeProperty(EntityCache cache) {
+		Field field = in(BasicClient.class).returnField("nome");
+		Method setMethod = in(BasicClient.class).returnSetMethodOf(field);
+		Method getMethod = in(BasicClient.class).returnGetMethodOf(field);
+		Property prop = new Property("nome", field, getMethod, setMethod);
 		Method addPropertyMethod = in(EntityCache.class).returnMethod("add", Property.class);
 		addPropertyMethod.setAccessible(true);
 		invoke(cache, addPropertyMethod).withParams(prop);
-		
-		field = in(BasicClient.class).returnField("endereco");
-		setMethod = in(BasicClient.class).returnSetMethodOf(field);
-		getMethod = in(BasicClient.class).returnGetMethodOf(field);
-		prop = new Property("endereco", field, getMethod, setMethod);
-		addPropertyMethod = in(EntityCache.class).returnMethod("add", Property.class);
+	}
+	
+	private void addEnderecoProperty(EntityCache cache) {
+		Field field = in(BasicClient.class).returnField("endereco");
+		Method setMethod = in(BasicClient.class).returnSetMethodOf(field);
+		Method getMethod = in(BasicClient.class).returnGetMethodOf(field);
+		Property prop = new Property("endereco", field, getMethod, setMethod);
+		Method addPropertyMethod = in(EntityCache.class).returnMethod("add", Property.class);
 		addPropertyMethod.setAccessible(true);
 		invoke(cache, addPropertyMethod).withParams(prop);
-		
-		return cache;
 	}
+	
 }
