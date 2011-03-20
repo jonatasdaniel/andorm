@@ -20,6 +20,14 @@ public final class ReflectionUtils {
 		this.clazz = clazz;
 	}
 	
+	public final Field returnField(String fieldName) {
+		try {
+			return clazz.getDeclaredField(fieldName);
+		} catch(NoSuchFieldException e) {
+			throw new AndOrmException(MessageFormat.format(bundle.getString("field_not_found"), fieldName, clazz.getName()));
+		}
+	}
+	
 	public final Method returnSetMethodOf(String field) {
 		Field f = null;
 		try {

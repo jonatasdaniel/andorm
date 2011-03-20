@@ -1,5 +1,6 @@
 package br.com.andorm.utils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import static br.com.andorm.utils.reflection.ReflectionUtils.*;
@@ -33,6 +34,27 @@ public class ReflectionUtilsTest extends AndroidTestCase {
 		Method method = in(c.getClass()).returnGetMethodOf("idade");
 		Integer returned = (Integer) invoke(c, method).withoutParams();
 		assertTrue(returned == 20);
+	}
+	
+	public void testReturnFieldNome() {
+		Field field = in(ReflectionTestClass.class).returnField("nome");
+		assertNotNull(field);
+		assertEquals("nome", field.getName());
+		assertEquals(String.class, field.getType());
+	}
+	
+	public void testReturnFieldIdade() {
+		Field field = in(ReflectionTestClass.class).returnField("idade");
+		assertNotNull(field);
+		assertEquals("idade", field.getName());
+		assertEquals(Integer.class, field.getType());
+	}
+	
+	public void testReturnFieldPeso() {
+		Field field = in(ReflectionTestClass.class).returnField("peso");
+		assertNotNull(field);
+		assertEquals("peso", field.getName());
+		assertEquals(Integer.class, field.getType());
 	}
 	
 }
