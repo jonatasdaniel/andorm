@@ -4,6 +4,8 @@ package br.com.andorm.persistence;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import static br.com.andorm.utils.reflection.ReflectionUtils.*;
+
 /**
  * 
  * @author jonatasdaniel
@@ -25,6 +27,14 @@ public class Property {
 		this.getMethod = getMethod;
 	}
 
+	public Object get(Object of) {
+		return invoke(of, getMethod).withoutParams();
+	}
+	
+	public void set(Object in, Object value) {
+		invoke(in, setMethod).withParams(value);
+	}
+	
 	protected String getColumnName() {
 		return columnName;
 	}

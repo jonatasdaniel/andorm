@@ -58,7 +58,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		ContentValues values = new ContentValues();
 		for(String column : cache.getColumnsWithoutAutoInc()) {
 			Property property = cache.getPropertyByColumn(column);
-			Object param = invoke(o, property.getGetMethod()).withoutParams();
+			Object param = property.get(o);
 			this.cache.invokePut(values, column, param);
 		}
 		
@@ -77,7 +77,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		//alter here when change to composite primary key
 		String whereClause = cache.getPk().getColumnName().concat("=?");
-		Object param = invoke(o, cache.getPk().getGetMethod()).withoutParams();
+		Object param = cache.getPk().get(o);
 		if(param == null)
 			throw new AndOrmException(MessageFormat.format(bundle.getString("id_null"), o.getClass().getCanonicalName()));
 		String[] whereArgs = {param.toString()};
@@ -98,13 +98,13 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		ContentValues values = new ContentValues();
 		for(String column : cache.getColumnsWithoutAutoInc()) {
 			Property property = cache.getPropertyByColumn(column);
-			Object param = invoke(o, property.getGetMethod()).withoutParams();
+			Object param = property.get(o);
 			this.cache.invokePut(values, column, param);
 		}
 		
 		//alter here when change to composite primary key
 		String whereClause = cache.getPk().getColumnName().concat("=?");
-		Object param = invoke(o, cache.getPk().getGetMethod()).withoutParams();
+		Object param = cache.getPk().get(o);
 		if(param == null)
 			throw new AndOrmException(MessageFormat.format(bundle.getString("id_null"), o.getClass().getCanonicalName()));
 		String[] whereArgs = {param.toString()};
@@ -143,11 +143,11 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			Method setMethod = property.getSetMethod();
 			
 			if(cursor.isNull(columnIndex)) {
-				invoke(object, setMethod).withParams(new Object[] {null});
+				property.set(object, new Object[] {null});
 			} else {
 				Class<?> type = setMethod.getParameterTypes()[0];
 				Object param = cache.invokeGet(cursor, type, columnIndex);
-				invoke(object, setMethod).withParams(param);
+				property.set(object, param);
 			}
 		}
 	}
