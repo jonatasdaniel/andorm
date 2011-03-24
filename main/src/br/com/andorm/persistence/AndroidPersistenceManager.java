@@ -1,8 +1,6 @@
 package br.com.andorm.persistence;
 
 
-import static br.com.andorm.utils.reflection.ReflectionUtils.invoke;
-
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
