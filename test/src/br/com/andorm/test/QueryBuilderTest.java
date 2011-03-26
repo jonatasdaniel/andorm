@@ -11,8 +11,8 @@ import java.lang.reflect.Method;
 import android.test.AndroidTestCase;
 import br.com.andorm.persistence.AndroidQueryBuilder;
 import br.com.andorm.persistence.EntityCache;
-import br.com.andorm.persistence.PrimaryKeyProperty;
-import br.com.andorm.persistence.Property;
+import br.com.andorm.persistence.property.PrimaryKeyProperty;
+import br.com.andorm.persistence.property.Property;
 import br.com.andorm.test.entity.BasicClient;
 
 import com.jonatasdaniel.criteria.Criteria;

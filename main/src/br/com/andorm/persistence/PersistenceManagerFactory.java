@@ -14,9 +14,12 @@ import br.com.andorm.AndOrmException;
 import br.com.andorm.AutoInc;
 import br.com.andorm.Column;
 import br.com.andorm.Entity;
+import br.com.andorm.MappedSuperClass;
 import br.com.andorm.PrimaryKey;
 import br.com.andorm.Table;
 import br.com.andorm.Transient;
+import br.com.andorm.persistence.property.PrimaryKeyProperty;
+import br.com.andorm.persistence.property.Property;
 import static br.com.andorm.utils.NameResolver.*;
 
 /**
@@ -48,27 +51,7 @@ public final class PersistenceManagerFactory {
 			
 			EntityCache cache = new EntityCache(clazz, tableName);
 			
-			for(Field field : clazz.getDeclaredFields()) {
-				if(Modifier.isStatic(field.getModifiers()) || field.isAnnotationPresent(Transient.class))
-					continue;
-				String columnName = null;
-				if(field.isAnnotationPresent(Column.class))
-					columnName = field.getAnnotation(Column.class).name();
-				else
-					columnName = toUnderscoreLowerCase(field.getName());
-				
-				Method setMethod = in(clazz).returnSetMethodOf(field);
-				Method getMethod = in(clazz).returnGetMethodOf(field);
-				if(field.isAnnotationPresent(PrimaryKey.class)) {
-					boolean isAutoInc = field.isAnnotationPresent(AutoInc.class);
-					PrimaryKeyProperty pk = new PrimaryKeyProperty(columnName, field, getMethod, setMethod, isAutoInc);
-					cache.setPk(pk);
-				} else {
-					Property property = new Property(columnName, field, getMethod, setMethod);
-					
-					cache.add(property);
-				}
-			}
+			reflectClass(clazz, cache);
 			
 			if(cache.getPk() == null)
 				throw new AndOrmException(MessageFormat.format(bundle.getString("has_not_a_pk"), clazz.getName()));
@@ -80,6 +63,34 @@ public final class PersistenceManagerFactory {
 		manager.setCache(persistenceManagerCache);
 		
 		return manager;
+	}
+	
+	private static void reflectClass(Class<?> clazz, EntityCache cache) {
+		if(clazz.getSuperclass().isAnnotationPresent(MappedSuperClass.class)) {
+			reflectClass(clazz.getSuperclass(), cache);
+		}
+		
+		for(Field field : clazz.getDeclaredFields()) {
+			if(Modifier.isStatic(field.getModifiers()) || field.isAnnotationPresent(Transient.class))
+				continue;
+			String columnName = null;
+			if(field.isAnnotationPresent(Column.class))
+				columnName = field.getAnnotation(Column.class).name();
+			else
+				columnName = toUnderscoreLowerCase(field.getName());
+			
+			Method setMethod = in(clazz).returnSetMethodOf(field);
+			Method getMethod = in(clazz).returnGetMethodOf(field);
+			if(field.isAnnotationPresent(PrimaryKey.class)) {
+				boolean isAutoInc = field.isAnnotationPresent(AutoInc.class);
+				PrimaryKeyProperty pk = new PrimaryKeyProperty(columnName, field, getMethod, setMethod, isAutoInc);
+				cache.setPk(pk);
+			} else {
+				Property property = new Property(columnName, field, getMethod, setMethod);
+				
+				cache.add(property);
+			}
+		}
 	}
 
 }

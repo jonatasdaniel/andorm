@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import br.com.andorm.AndOrmException;
+import br.com.andorm.persistence.property.Property;
 
 import com.jonatasdaniel.criteria.Criteria;
 

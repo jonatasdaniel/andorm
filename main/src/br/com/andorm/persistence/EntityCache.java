@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.andorm.persistence.property.PrimaryKeyProperty;
+import br.com.andorm.persistence.property.Property;
+
 /**
  * 
  * @author jonatasdaniel
