@@ -1,9 +1,9 @@
-main/res
-test/res
-main/bin
-main/test
-main/gen
-test/gen
+main/res/
+test/res/
+main/bin/
+main/test/
+main/gen/
+test/gen/
 main/.project
 test/.project
 main/.classpath
