@@ -1,4 +1,4 @@
-package br.com.andorm.utils.reflection;
+package br.com.andorm.reflection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

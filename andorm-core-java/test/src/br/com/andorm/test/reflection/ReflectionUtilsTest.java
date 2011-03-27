@@ -1,9 +1,10 @@
-package br.com.andorm.test.utils;
+package br.com.andorm.test.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import static br.com.andorm.utils.reflection.ReflectionUtils.*;
+
+import static br.com.andorm.reflection.ReflectionUtils.*;
 
 import android.test.AndroidTestCase;
 
@@ -55,6 +56,33 @@ public class ReflectionUtilsTest extends AndroidTestCase {
 		assertNotNull(field);
 		assertEquals("peso", field.getName());
 		assertEquals(Integer.class, field.getType());
+	}
+	
+	public void testReturnPrivateAccessorMethod() {
+		Field field = in(ReflectionTestClass.class).returnField("endereco");
+		assertNotNull(field);
+		assertEquals("endereco", field.getName());
+		assertEquals(String.class, field.getType());
+		
+		Method setMethod = in(ReflectionTestClass.class).returnSetMethodOf(field);
+		assertNotNull(setMethod);
+		assertEquals("setEndereco", setMethod.getName());
+		assertEquals(String.class, setMethod.getParameterTypes()[0]);
+		
+		Method getMethod = in(ReflectionTestClass.class).returnGetMethodOf(field);
+		assertNotNull(getMethod);
+		assertEquals("getEndereco", getMethod.getName());
+		assertEquals(String.class, getMethod.getReturnType());
+	}
+	
+	public void testInvokePrivateAccessorMethod() {
+		Field field = in(ReflectionTestClass.class).returnField("endereco");
+		Method setMethod = in(ReflectionTestClass.class).returnSetMethodOf(field);
+		ReflectionTestClass object = new ReflectionTestClass();
+		invoke(object, setMethod).withParams("a address");
+		Method getMethod = in(ReflectionTestClass.class).returnGetMethodOf(field);
+		String returned = (String) invoke(object, getMethod).withoutParams();
+		assertEquals(returned, "a address");
 	}
 	
 }
