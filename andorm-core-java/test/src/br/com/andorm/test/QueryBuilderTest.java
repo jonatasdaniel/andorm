@@ -13,14 +13,14 @@ import br.com.andorm.persistence.AndroidQueryBuilder;
 import br.com.andorm.persistence.EntityCache;
 import br.com.andorm.persistence.property.PrimaryKeyProperty;
 import br.com.andorm.persistence.property.Property;
-import br.com.andorm.test.entity.BasicClient;
+import br.com.andorm.test.entity.BasicEntity;
 
 import com.jonatasdaniel.criteria.Criteria;
 
 public class QueryBuilderTest extends AndroidTestCase {
 	
 	public void testShouldHaveOneLikeClause() {
-		Criteria criteria = new Criteria(BasicClient.class);
+		Criteria criteria = new Criteria(BasicEntity.class);
 		criteria.where(like("nome", "joaozinho"));
 		
 		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
@@ -35,7 +35,7 @@ public class QueryBuilderTest extends AndroidTestCase {
 	}
 	
 	public void testShouldHaveOneMatchClause() {
-		Criteria criteria = new Criteria(BasicClient.class);
+		Criteria criteria = new Criteria(BasicEntity.class);
 		criteria.where(match("nome", "joaozinho"));
 		
 		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
@@ -50,7 +50,7 @@ public class QueryBuilderTest extends AndroidTestCase {
 	}
 	
 	private EntityCache entityCache() {
-		EntityCache cache = new EntityCache(BasicClient.class, "basic_client");
+		EntityCache cache = new EntityCache(BasicEntity.class, "basic_client");
 		addIdProperty(cache);
 		addNomeProperty(cache);
 		addEnderecoProperty(cache);
@@ -59,9 +59,9 @@ public class QueryBuilderTest extends AndroidTestCase {
 	}
 	
 	private void addIdProperty(EntityCache cache) {
-		Field field = in(BasicClient.class).returnField("id");
-		Method setMethod = in(BasicClient.class).returnSetMethodOf(field);
-		Method getMethod = in(BasicClient.class).returnGetMethodOf(field);
+		Field field = in(BasicEntity.class).returnField("id");
+		Method setMethod = in(BasicEntity.class).returnSetMethodOf(field);
+		Method getMethod = in(BasicEntity.class).returnGetMethodOf(field);
 		Property prop = new PrimaryKeyProperty("id", field, getMethod, setMethod, true);
 		Method setPkMethod = in(EntityCache.class).returnMethod("setPk", PrimaryKeyProperty.class);
 		setPkMethod.setAccessible(true);
@@ -69,9 +69,9 @@ public class QueryBuilderTest extends AndroidTestCase {
 	}
 	
 	private void addNomeProperty(EntityCache cache) {
-		Field field = in(BasicClient.class).returnField("nome");
-		Method setMethod = in(BasicClient.class).returnSetMethodOf(field);
-		Method getMethod = in(BasicClient.class).returnGetMethodOf(field);
+		Field field = in(BasicEntity.class).returnField("nome");
+		Method setMethod = in(BasicEntity.class).returnSetMethodOf(field);
+		Method getMethod = in(BasicEntity.class).returnGetMethodOf(field);
 		Property prop = new Property("nome", field, getMethod, setMethod);
 		Method addPropertyMethod = in(EntityCache.class).returnMethod("add", Property.class);
 		addPropertyMethod.setAccessible(true);
@@ -79,9 +79,9 @@ public class QueryBuilderTest extends AndroidTestCase {
 	}
 	
 	private void addEnderecoProperty(EntityCache cache) {
-		Field field = in(BasicClient.class).returnField("endereco");
-		Method setMethod = in(BasicClient.class).returnSetMethodOf(field);
-		Method getMethod = in(BasicClient.class).returnGetMethodOf(field);
+		Field field = in(BasicEntity.class).returnField("endereco");
+		Method setMethod = in(BasicEntity.class).returnSetMethodOf(field);
+		Method getMethod = in(BasicEntity.class).returnGetMethodOf(field);
 		Property prop = new Property("endereco", field, getMethod, setMethod);
 		Method addPropertyMethod = in(EntityCache.class).returnMethod("add", Property.class);
 		addPropertyMethod.setAccessible(true);

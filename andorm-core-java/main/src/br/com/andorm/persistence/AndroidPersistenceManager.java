@@ -12,6 +12,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import br.com.andorm.AndOrmException;
 import br.com.andorm.persistence.property.Property;
 
@@ -124,7 +125,12 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		String selection = cache.getPk().getColumnName().concat(" =?");
 		String[] selectionArgs = {pk.toString()};
 		
-		Cursor cursor = database.query(cache.getTableName(), null, selection, selectionArgs, null, null, null);
+		Cursor cursor = null;
+		try {
+			cursor = database.query(cache.getTableName(), null, selection, selectionArgs, null, null, null);
+		} catch(SQLiteException e) {
+			throw new AndOrmPersistenceException(MessageFormat.format("read_error", entityClass.getCanonicalName(), e.getMessage()));
+		}
 		
 		if(cursor.moveToFirst()) {
 			T object = newInstanceOf(entityClass);
@@ -205,6 +211,17 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		}
 		
 		return list;
+	}
+
+	@Override
+	public long count(Class<?> of) {
+		EntityCache cache = this.cache.getEntityCache(of);
+		if(cache == null)
+			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), of.getCanonicalName()));
+		
+		StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM ");
+		sql.append(cache.getTableName());
+		return database.compileStatement(sql.toString()).simpleQueryForLong();
 	}
 
 }

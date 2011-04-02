@@ -23,6 +23,8 @@ public interface PersistenceManager {
 	 */
 	void close();
 	
+	long count(Class<?> of);
+	
 	/**
 	 * Save a entity in the database
 	 * @param o Entity to save
