@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.jonatasdaniel.criteria.Condition;
-import com.jonatasdaniel.criteria.Criteria;
-import com.jonatasdaniel.criteria.LogicComparator;
-import com.jonatasdaniel.criteria.LogicalOperator;
-import com.jonatasdaniel.criteria.Restriction;
+import br.com.andorm.query.Condition;
+import br.com.andorm.query.Criteria;
+import br.com.andorm.query.LogicComparator;
+import br.com.andorm.query.LogicalOperator;
+import br.com.andorm.query.Restriction;
 
 
 public class AndroidQueryBuilder {

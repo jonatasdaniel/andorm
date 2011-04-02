@@ -15,8 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import br.com.andorm.AndOrmException;
 import br.com.andorm.persistence.property.Property;
-
-import com.jonatasdaniel.criteria.Criteria;
+import br.com.andorm.query.Criteria;
 
 /**
  * 

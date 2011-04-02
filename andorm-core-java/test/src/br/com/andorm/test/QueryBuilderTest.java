@@ -2,8 +2,6 @@ package br.com.andorm.test;
 
 import static br.com.andorm.reflection.Reflactor.in;
 import static br.com.andorm.reflection.Reflactor.invoke;
-import static com.jonatasdaniel.criteria.Restriction.like;
-import static com.jonatasdaniel.criteria.Restriction.match;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,9 +11,10 @@ import br.com.andorm.persistence.AndroidQueryBuilder;
 import br.com.andorm.persistence.EntityCache;
 import br.com.andorm.persistence.property.PrimaryKeyProperty;
 import br.com.andorm.persistence.property.Property;
+import br.com.andorm.query.Criteria;
 import br.com.andorm.test.entity.BasicEntity;
 
-import com.jonatasdaniel.criteria.Criteria;
+import static br.com.andorm.query.Restriction.*;
 
 public class QueryBuilderTest extends AndroidTestCase {
 	

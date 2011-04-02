@@ -2,7 +2,7 @@ package br.com.andorm.persistence;
 
 import java.util.List;
 
-import com.jonatasdaniel.criteria.Criteria;
+import br.com.andorm.query.Criteria;
 
 /**
  * 
