@@ -92,4 +92,13 @@ public final class Reflactor {
 		return new Reflactor(clazz);
 	}
 	
+	public final static Object getFieldValue(Object of, Field field) {
+		try {
+			field.setAccessible(true);
+			return field.get(of);
+		} catch(IllegalAccessException e) {
+			throw new AndOrmException(MessageFormat.format(bundle.getString("get_field_value_error"), field.getName(), e.getMessage()));
+		}
+	}
+	
 }

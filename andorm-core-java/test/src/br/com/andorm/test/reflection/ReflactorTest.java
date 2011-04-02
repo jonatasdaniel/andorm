@@ -85,4 +85,27 @@ public class ReflactorTest extends AndroidTestCase {
 		assertEquals(returned, "a address");
 	}
 	
+	public void testGetFieldValueMethod() {
+		ReflectionTestClass c = new ReflectionTestClass();
+		c.setIdade(20);
+		c.setNome("a name");
+		c.setPeso(70);
+		
+		Field idadeField = in(ReflectionTestClass.class).returnField("idade");
+		Field nomeField = in(ReflectionTestClass.class).returnField("nome");
+		Field pesoField = in(ReflectionTestClass.class).returnField("peso");
+		
+		Object idade = getFieldValue(c, idadeField);
+		assertNotNull(idade);
+		assertEquals(c.getIdade(), idade);
+		
+		Object nome = getFieldValue(c, nomeField);
+		assertNotNull(nome);
+		assertEquals(c.getNome(), nome);
+		
+		Object peso = getFieldValue(c, pesoField);
+		assertNotNull(peso);
+		assertEquals(c.getPeso(), peso);
+	}
+	
 }
