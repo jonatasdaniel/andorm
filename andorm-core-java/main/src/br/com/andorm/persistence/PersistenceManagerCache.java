@@ -1,8 +1,8 @@
 package br.com.andorm.persistence;
 
 
-import static br.com.andorm.utils.reflection.ReflectionUtils.in;
-import static br.com.andorm.utils.reflection.ReflectionUtils.invoke;
+import static br.com.andorm.reflection.Reflactor.in;
+import static br.com.andorm.reflection.Reflactor.invoke;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

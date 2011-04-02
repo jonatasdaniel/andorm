@@ -1,7 +1,7 @@
 package br.com.andorm.test;
 
-import static br.com.andorm.utils.reflection.ReflectionUtils.in;
-import static br.com.andorm.utils.reflection.ReflectionUtils.invoke;
+import static br.com.andorm.reflection.Reflactor.in;
+import static br.com.andorm.reflection.Reflactor.invoke;
 import static com.jonatasdaniel.criteria.Restriction.like;
 import static com.jonatasdaniel.criteria.Restriction.match;
 

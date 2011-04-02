@@ -4,7 +4,7 @@ package br.com.andorm.persistence.property;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import static br.com.andorm.utils.reflection.ReflectionUtils.*;
+import static br.com.andorm.reflection.Reflactor.*;
 
 /**
  * 

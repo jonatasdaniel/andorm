@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import br.com.andorm.persistence.property.Property;
 import android.test.AndroidTestCase;
 
-import static br.com.andorm.utils.reflection.ReflectionUtils.*;
+import static br.com.andorm.reflection.Reflactor.*;
 
 public class PropertyTest extends AndroidTestCase {
 

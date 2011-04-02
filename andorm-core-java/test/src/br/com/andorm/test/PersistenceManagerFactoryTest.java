@@ -1,14 +1,13 @@
 package br.com.andorm.test;
 
-import resources.ResourceBundleFactory;
-
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import resources.ResourceBundleFactory;
+import android.test.AndroidTestCase;
 import br.com.andorm.AndOrmConfiguration;
 import br.com.andorm.AndOrmException;
 import br.com.andorm.persistence.PersistenceManagerFactory;
-import android.test.AndroidTestCase;
 
 
 public class PersistenceManagerFactoryTest extends AndroidTestCase {
@@ -25,5 +24,5 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 			assertEquals(e.getMessage(), MessageFormat.format(bundle.getString("is_not_a_entity"), Integer.class.getName()));
 		}
 	}
-
+	
 }

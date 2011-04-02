@@ -1,6 +1,6 @@
 package br.com.andorm.test.property;
 
-import static br.com.andorm.utils.reflection.ReflectionUtils.in;
+import static br.com.andorm.reflection.Reflactor.in;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

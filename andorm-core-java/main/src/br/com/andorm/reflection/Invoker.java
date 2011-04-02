@@ -23,6 +23,7 @@ public final class Invoker {
 	}
 	
 	public Object withParams(Object... params) {
+		method.setAccessible(true);
 		try {
 			return method.invoke(receiver, params);
 		} catch(InvocationTargetException e) {
@@ -33,6 +34,7 @@ public final class Invoker {
 	}
 	
 	public Object withoutParams() {
+		method.setAccessible(true);
 		try {
 			return method.invoke(receiver, new Object[] {});
 		} catch(InvocationTargetException e) {
