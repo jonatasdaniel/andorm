@@ -1,7 +1,7 @@
 package br.com.andorm.persistence;
 
 
-public class AndOrmPersistenceException extends Exception {
+public class AndOrmPersistenceException extends RuntimeException {
 
 	private static final long	serialVersionUID	= 1L;
 	

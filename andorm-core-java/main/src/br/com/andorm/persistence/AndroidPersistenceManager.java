@@ -49,7 +49,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	}
 
 	@Override
-	public void save(Object o) throws AndOrmPersistenceException {
+	public void save(Object o) {
 		EntityCache cache = this.cache.getEntityCache(o.getClass());
 		if(cache == null)
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("is_not_a_entity"), o.getClass().getCanonicalName()));
@@ -69,7 +69,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	}
 	
 	@Override
-	public void delete(Object o) throws AndOrmPersistenceException {
+	public void delete(Object o) {
 		EntityCache cache = this.cache.getEntityCache(o.getClass());
 		if(cache == null)
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("is_not_a_entity"), o.getClass().getCanonicalName()));
@@ -89,7 +89,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	}
 
 	@Override
-	public void update(Object o) throws AndOrmPersistenceException {
+	public void update(Object o) {
 		EntityCache cache = this.cache.getEntityCache(o.getClass());
 		if(cache == null)
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("is_not_a_entity"), o.getClass().getCanonicalName()));

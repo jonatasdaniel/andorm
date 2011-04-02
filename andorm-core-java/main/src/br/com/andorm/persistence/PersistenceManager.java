@@ -28,21 +28,21 @@ public interface PersistenceManager {
 	 * @param o Entity to save
 	 * @throws AndOrmPersistenceException
 	 */
-	void save(Object o) throws AndOrmPersistenceException;
+	void save(Object o);
 	
 	/**
 	 * Delete a entity in the database
 	 * @param o Entity to delete
 	 * @throws AndOrmPersistenceException
 	 */
-	void delete(Object o) throws AndOrmPersistenceException;
+	void delete(Object o);
 	
 	/**
 	 * update a entity in the database
 	 * @param o Entity to update
 	 * @throws AndOrmPersistenceException
 	 */
-	void update(Object o) throws AndOrmPersistenceException;
+	void update(Object o);
 	
 	/**
 	 * Return a entity contained in the database, specified by the pk
