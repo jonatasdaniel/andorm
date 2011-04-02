@@ -70,7 +70,7 @@ public class PersistenceManagerCache {
 		contentValuesMethods.put(paramType, putMethod);
 	}
 
-	protected EntityCache getEntityCache(Class<?> entityClass) {
+	public EntityCache getEntityCache(Class<?> entityClass) {
 		return entityCaches.get(entityClass);
 	}
 	

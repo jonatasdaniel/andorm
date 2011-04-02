@@ -58,11 +58,11 @@ public final class EntityCache {
 		}
 	}
 
-	protected Property getPropertyByColumn(String column) {
+	public Property getPropertyByColumn(String column) {
 		return columnProperties.get(column);
 	}
 
-	protected Property getPropertyByField(String field) {
+	public Property getPropertyByField(String field) {
 		return fieldProperties.get(field);
 	}
 
@@ -70,19 +70,19 @@ public final class EntityCache {
 		return tableName;
 	}
 
-	protected PrimaryKeyProperty getPk() {
+	public PrimaryKeyProperty getPk() {
 		return pk;
 	}
 
-	protected List<String> getColumns() {
+	public List<String> getColumns() {
 		return columns;
 	}
 
-	protected List<String> getColumnsWithoutAutoInc() {
+	public List<String> getColumnsWithoutAutoInc() {
 		return columnsWithoutAutoInc;
 	}
 
-	protected Class<?> getEntityClass() {
+	public Class<?> getEntityClass() {
 		return entityClass;
 	}
 }
