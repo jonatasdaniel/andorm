@@ -1,9 +1,9 @@
-andorm-core-java/main/res/*.*
-andorm-core-java/test/res/*.*
+andorm-core-java/main/res/*
+andorm-core-java/test/res*
 andorm-core-java/main/bin/*
-andorm-core-java/main/test/*.*
-andorm-core-java/main/gen/*.*
-andorm-core-java/test/gen/*.*
+andorm-core-java/main/test/*
+andorm-core-java/main/gen/*
+andorm-core-java/test/gen/*
 andorm-core-java/main/.project
 andorm-core-java/test/.project
 andorm-core-java/main/.classpath
