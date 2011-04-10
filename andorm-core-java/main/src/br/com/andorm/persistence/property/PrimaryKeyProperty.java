@@ -16,9 +16,8 @@ public class PrimaryKeyProperty extends Property {
 
 	private final boolean	autoInc;
 
-	public PrimaryKeyProperty(String columnName, Field field, Method getMethod,
-			Method setMethod, boolean autoInc) {
-		super(columnName, field, getMethod, setMethod);
+	public PrimaryKeyProperty(String columnName, Field field, Method getMethod, Method setMethod, boolean autoInc, boolean nullable) {
+		super(columnName, field, getMethod, setMethod, nullable);
 		this.autoInc = autoInc;
 	}
 

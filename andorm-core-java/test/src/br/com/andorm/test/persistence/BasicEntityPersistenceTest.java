@@ -87,5 +87,19 @@ public class BasicEntityPersistenceTest extends AndOrmPersistenceTestCase {
 		
 		manager.getTransaction().end();
 	}
+	
+	public void testSaveNullAttributes() {
+		BasicEntity entity = new BasicEntity();
+		entity.setNome("a name");
+		manager.getTransaction().begin();
+		manager.save(entity);
+		
+		BasicEntity returned = manager.read(BasicEntity.class, 1);
+		
+		assertNotNull(returned);
+		assertEquals(entity, returned);
+		
+		manager.getTransaction().end();
+	}
 
 }

@@ -61,7 +61,7 @@ public class QueryBuilderTest extends AndroidTestCase {
 		Field field = in(BasicEntity.class).returnField("id");
 		Method setMethod = in(BasicEntity.class).returnSetMethodOf(field);
 		Method getMethod = in(BasicEntity.class).returnGetMethodOf(field);
-		Property prop = new PrimaryKeyProperty("id", field, getMethod, setMethod, true);
+		Property prop = new PrimaryKeyProperty("id", field, getMethod, setMethod, true, true);
 		Method setPkMethod = in(EntityCache.class).returnMethod("setPk", PrimaryKeyProperty.class);
 		setPkMethod.setAccessible(true);
 		invoke(cache, setPkMethod).withParams(prop);

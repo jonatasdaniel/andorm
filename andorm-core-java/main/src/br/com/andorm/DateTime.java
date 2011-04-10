@@ -5,20 +5,20 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import br.com.andorm.types.TemporalType;
+
 /**
  * 
  * @author jonatasdaniel
- * @since 03/02/2011
+ * @since 09/04/2011
  * @version 0.9
  *
  */
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Column {
+public @interface DateTime {
 
-	String name() default "";
-	int length() default -1;
-	boolean nullable() default true;
+	TemporalType type() default TemporalType.Date;
 	
 }

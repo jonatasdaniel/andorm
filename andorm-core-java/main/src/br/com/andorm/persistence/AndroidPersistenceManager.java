@@ -17,6 +17,8 @@ import br.com.andorm.AndOrmException;
 import br.com.andorm.persistence.property.Property;
 import br.com.andorm.query.Criteria;
 
+import static br.com.andorm.reflection.Reflactor.*;
+
 /**
  * 
  * @author jonatasdaniel
@@ -58,7 +60,14 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		for(String column : cache.getColumnsWithoutAutoInc()) {
 			Property property = cache.getPropertyByColumn(column);
 			Object param = property.get(o);
-			this.cache.invokePut(values, column, param);
+			
+			if(param != null) {
+				Method putMethod = this.cache.getContentValuesHelper().getMethod(param.getClass());
+				invoke(values, putMethod).withParams(column, param);
+			} else {
+				Method putMethod = this.cache.getContentValuesHelper().getPutNullMethod();
+				invoke(values, putMethod).withParams(column);
+			}
 		}
 		
 		try {
@@ -98,7 +107,14 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		for(String column : cache.getColumnsWithoutAutoInc()) {
 			Property property = cache.getPropertyByColumn(column);
 			Object param = property.get(o);
-			this.cache.invokePut(values, column, param);
+			
+			if(param != null) {
+				Method putMethod = this.cache.getContentValuesHelper().getMethod(param.getClass());
+				invoke(values, putMethod).withParams(column, param);
+			} else {
+				Method putMethod = this.cache.getContentValuesHelper().getPutNullMethod();
+				invoke(values, putMethod).withParams(column);
+			}
 		}
 		
 		//alter here when change to composite primary key
@@ -147,10 +163,13 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			Method setMethod = property.getSetMethod();
 			
 			if(cursor.isNull(columnIndex)) {
-				property.set(object, new Object[] {null});
+				property.set(object, null);
 			} else {
 				Class<?> type = setMethod.getParameterTypes()[0];
-				Object param = cache.invokeGet(cursor, type, columnIndex);
+				
+				Method cursorMethod = cache.getCursorHelper().getMethod(type);
+				Object param = invoke(cursor, cursorMethod).withParams(columnIndex);
+				
 				property.set(object, param);
 			}
 		}
@@ -179,7 +198,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 
 	@Override
 	public TableManager getTableManager() {
-		return new TableManager(cache);
+		return new TableManager(cache, database);
 	}
 
 	@Override

@@ -38,8 +38,11 @@ public class DateTimeProperty extends Property {
 	
 	@Override
 	public Object get(Object of) {
-		Date date = (Date) super.get(of); 
-		return date.getTime();
+		Date date = (Date) super.get(of);
+		if(date != null)
+			return date.getTime();
+		else
+			return null;
 	}
 	
 }
