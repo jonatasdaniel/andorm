@@ -29,12 +29,7 @@ public final class Reflactor {
 	}
 	
 	public final Method returnSetMethodOf(String field) {
-		Field f = null;
-		try {
-			f = clazz.getDeclaredField(field);
-		} catch(NoSuchFieldException e) {
-			throw new AndOrmException(MessageFormat.format(bundle.getString("field_not_found"), field, clazz.getName()));
-		}
+		Field f = returnField(field);
 		
 		return returnSetMethodOf(f);
 	}
@@ -51,12 +46,7 @@ public final class Reflactor {
 	}
 	
 	public final Method returnGetMethodOf(String field) {
-		Field f = null;
-		try {
-			f = clazz.getDeclaredField(field);
-		} catch(NoSuchFieldException e) {
-			throw new AndOrmException(MessageFormat.format(bundle.getString("field_not_found"), field, clazz.getName()));
-		}
+		Field f = returnField(field);
 		
 		return returnGetMethodOf(f);
 	}
