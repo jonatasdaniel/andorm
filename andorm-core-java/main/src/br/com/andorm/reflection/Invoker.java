@@ -34,13 +34,6 @@ public final class Invoker {
 	}
 	
 	public Object withoutParams() {
-		method.setAccessible(true);
-		try {
-			return method.invoke(receiver, new Object[] {});
-		} catch(InvocationTargetException e) {
-			throw new AndOrmException(MessageFormat.format(bundle.getString("invocation_failed"), method.getName(), e.getMessage()));
-		} catch(IllegalAccessException ie) {
-			throw new AndOrmException(MessageFormat.format(bundle.getString("invocation_failed"), method.getName(), ie.getMessage()));
-		}
+		return withParams(new Object[] {});
 	}
 }

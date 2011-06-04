@@ -91,4 +91,14 @@ public final class Reflactor {
 		}
 	}
 	
+	public final static <T> T newInstance(Class<T> clazz) {
+		try {
+			return clazz.newInstance();
+		} catch(InstantiationException ie) {
+			throw new AndOrmException(MessageFormat.format(bundle.getString("object_creation_error"), clazz.getCanonicalName()));
+		} catch(IllegalAccessException iae) {
+			throw new AndOrmException(MessageFormat.format(bundle.getString("object_creation_error"), clazz.getCanonicalName()));
+		}
+	}
+	
 }
