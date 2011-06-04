@@ -16,6 +16,7 @@ import android.database.sqlite.SQLiteException;
 import br.com.andorm.AndOrmException;
 import br.com.andorm.persistence.property.Property;
 import br.com.andorm.query.Criteria;
+import br.com.andorm.reflection.Reflactor;
 
 import static br.com.andorm.reflection.Reflactor.*;
 
@@ -52,6 +53,9 @@ public class AndroidPersistenceManager implements PersistenceManager {
 
 	@Override
 	public void save(Object o) {
+		if(!isOpen())
+			open();
+		
 		EntityCache cache = this.cache.getEntityCache(o.getClass());
 		if(cache == null)
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("is_not_a_entity"), o.getClass().getCanonicalName()));
@@ -79,6 +83,8 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	
 	@Override
 	public void delete(Object o) {
+		if(!isOpen())
+			open();
 		EntityCache cache = this.cache.getEntityCache(o.getClass());
 		if(cache == null)
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("is_not_a_entity"), o.getClass().getCanonicalName()));
@@ -99,6 +105,8 @@ public class AndroidPersistenceManager implements PersistenceManager {
 
 	@Override
 	public void update(Object o) {
+		if(!isOpen())
+			open();
 		EntityCache cache = this.cache.getEntityCache(o.getClass());
 		if(cache == null)
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("is_not_a_entity"), o.getClass().getCanonicalName()));
@@ -133,6 +141,8 @@ public class AndroidPersistenceManager implements PersistenceManager {
 
 	@Override
 	public <T> T read(Class<T> entityClass, Object pk) {
+		if(!isOpen())
+			open();
 		EntityCache cache = this.cache.getEntityCache(entityClass);
 		if(cache == null)
 			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), entityClass.getCanonicalName()));
@@ -148,7 +158,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		}
 		
 		if(cursor.moveToFirst()) {
-			T object = newInstanceOf(entityClass);
+			T object = Reflactor.newInstance(entityClass);
 			inflate(cursor, object, cache);
 			return object;
 		} else
@@ -175,22 +185,14 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		}
 	}
 	
-	private <T> T newInstanceOf(Class<T> clazz) {
-		try {
-			return clazz.newInstance();
-		} catch(InstantiationException ie) {
-			throw new AndOrmException(MessageFormat.format(bundle.getString("object_creation_error"), clazz.getCanonicalName()));
-		} catch(IllegalAccessException iae) {
-			throw new AndOrmException(MessageFormat.format(bundle.getString("object_creation_error"), clazz.getCanonicalName()));
-		}
-	}
-	
 	protected void setCache(PersistenceManagerCache cache) {
 		this.cache = cache;
 	}
 
 	@Override
 	public Transaction getTransaction() {
+		if(!isOpen())
+			open();
 		if(transaction == null)
 			transaction = new AndroidTransaction(database);
 		return transaction;
@@ -198,11 +200,15 @@ public class AndroidPersistenceManager implements PersistenceManager {
 
 	@Override
 	public TableManager getTableManager() {
+		if(!isOpen())
+			open();
 		return new TableManager(cache, database);
 	}
 
 	@Override
 	public List<? extends Object> list(Criteria criteria) {
+		if(!isOpen())
+			open();
 		EntityCache cache = this.cache.getEntityCache(criteria.getClazz());
 		if(cache == null)
 			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), criteria.getClazz().getCanonicalName()));
@@ -222,7 +228,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		if(cursor.moveToFirst()) {
 			do {
-				Object object = newInstanceOf(criteria.getClazz());
+				Object object = Reflactor.newInstance(criteria.getClazz());
 				inflate(cursor, object, cache);
 				list.add(object);
 			} while(cursor.moveToNext());
@@ -233,6 +239,8 @@ public class AndroidPersistenceManager implements PersistenceManager {
 
 	@Override
 	public long count(Class<?> of) {
+		if(!isOpen())
+			open();
 		EntityCache cache = this.cache.getEntityCache(of);
 		if(cache == null)
 			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), of.getCanonicalName()));
@@ -240,6 +248,18 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM ");
 		sql.append(cache.getTableName());
 		return database.compileStatement(sql.toString()).simpleQueryForLong();
+	}
+
+	@Override
+	public long count(Criteria criteria) {
+		if(!isOpen())
+			open();
+		return 0;
+	}
+
+	@Override
+	public boolean isOpen() {
+		return database != null && database.isOpen();
 	}
 
 }

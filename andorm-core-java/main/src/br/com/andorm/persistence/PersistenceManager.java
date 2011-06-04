@@ -18,12 +18,16 @@ public interface PersistenceManager {
 	 */
 	void open();
 	
+	boolean isOpen();
+	
 	/**
 	 * Close the database
 	 */
 	void close();
 	
 	long count(Class<?> of);
+	
+	long count(Criteria criteria);
 	
 	/**
 	 * Save a entity in the database
