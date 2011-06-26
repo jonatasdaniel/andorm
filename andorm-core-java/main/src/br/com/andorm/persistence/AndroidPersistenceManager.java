@@ -1,6 +1,8 @@
 package br.com.andorm.persistence;
 
 
+import static br.com.andorm.reflection.Reflactor.invoke;
+
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -15,10 +17,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import br.com.andorm.AndOrmException;
 import br.com.andorm.persistence.property.Property;
+import br.com.andorm.persistence.tablemanager.TableManager;
 import br.com.andorm.query.Criteria;
 import br.com.andorm.reflection.Reflactor;
-
-import static br.com.andorm.reflection.Reflactor.*;
 
 /**
  * 
@@ -206,14 +207,14 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	}
 
 	@Override
-	public List<? extends Object> list(Criteria criteria) {
+	public <T> List<T> find(Class<T> entityClass, Criteria query) {
 		if(!isOpen())
 			open();
-		EntityCache cache = this.cache.getEntityCache(criteria.getClazz());
+		EntityCache cache = this.cache.getEntityCache(query.getClazz());
 		if(cache == null)
-			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), criteria.getClazz().getCanonicalName()));
+			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), query.getClazz().getCanonicalName()));
 
-		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, cache);
+		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(query, cache);
 		queryBuilder.build();
 		
 		String selection = queryBuilder.whereClause();
@@ -224,11 +225,12 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		Cursor cursor = database.query(cache.getTableName(), null, selection, selectionArgs, groupBy, having, orderBy);
 		
-		List<Object> list = new ArrayList<Object>();
+		List<T> list = new ArrayList<T>();
 		
 		if(cursor.moveToFirst()) {
 			do {
-				Object object = Reflactor.newInstance(criteria.getClazz());
+				@SuppressWarnings("all")
+				T object = (T) Reflactor.newInstance(query.getClazz());
 				inflate(cursor, object, cache);
 				list.add(object);
 			} while(cursor.moveToNext());

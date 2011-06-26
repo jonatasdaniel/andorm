@@ -2,6 +2,7 @@ package br.com.andorm.persistence;
 
 import java.util.List;
 
+import br.com.andorm.persistence.tablemanager.TableManager;
 import br.com.andorm.query.Criteria;
 
 /**
@@ -58,7 +59,7 @@ public interface PersistenceManager {
 	 */
 	<T> T read(Class<T> entityClass, Object pk);
 	
-	public List<? extends Object> list(Criteria criteria); 
+	public <T> List<T> find(Class<T> entityClass, Criteria query); 
 	
 	Transaction getTransaction();
 	
