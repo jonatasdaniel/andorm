@@ -11,10 +11,14 @@ public final class Criteria {
 	private final List<Condition> conditions;
 	private final List<Order> orders;
 
-	public Criteria(Class<?> clazz) {
+	private Criteria(Class<?> clazz) {
 		this.clazz = clazz;
 		conditions = new ArrayList<Condition>();
 		orders = new ArrayList<Order>();
+	}
+	
+	public static Criteria from(Class<?> clazz) {
+		return new Criteria(clazz);
 	}
 
 	public Restriction getRestriction() {

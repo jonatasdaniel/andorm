@@ -21,7 +21,7 @@ public class BasicWhereTest {
 
 	@Test
 	public void selectAllTest() {
-		Criteria criteria = new Criteria(Person.class);
+		Criteria criteria = Criteria.from(Person.class);
 		
 		final String expected = "SELECT person FROM Person person";
 		final String builded = new JPAQueryBuilder(criteria).build();
@@ -31,9 +31,7 @@ public class BasicWhereTest {
 	
 	@Test
 	public void shouldHaveOneCondition() {
-		Criteria criteria = new Criteria(Person.class);
-		
-		criteria.where(like("nome", "a basic name"));
+		Criteria criteria = Criteria.from(Person.class).where(like("nome", "a basic name"));
 		
 		final String expected = "SELECT person FROM Person person WHERE person.nome LIKE ?1";
 		final String builded = new JPAQueryBuilder(criteria).build();
@@ -44,9 +42,7 @@ public class BasicWhereTest {
 	
 	@Test
 	public void shouldHaveTwoConditions() {
-		Criteria criteria = new Criteria(Person.class);
-		
-		criteria.where(like("nome", "a name"), and(match("idade", 18)));
+		Criteria criteria = Criteria.from(Person.class).where(like("nome", "a name"), and(match("idade", 18)));
 		
 		final String expected = "SELECT person FROM Person person WHERE person.nome LIKE ?1 AND person.idade = ?2";
 		final String builded = new JPAQueryBuilder(criteria).build();
@@ -57,9 +53,7 @@ public class BasicWhereTest {
 	
 	@Test
 	public void shouldHaveThreeConditions() {
-		Criteria criteria = new Criteria(Person.class);
-		
-		criteria.where(like("nome", "a name"), and(match("idade", 18)), and(match("sexo", 'M')));
+		Criteria criteria = Criteria.from(Person.class).where(like("nome", "a name"), and(match("idade", 18)), and(match("sexo", 'M')));
 		
 		final String expected = "SELECT person FROM Person person WHERE person.nome LIKE ?1 AND person.idade = ?2 AND person.sexo = ?3";
 		final String builded = new JPAQueryBuilder(criteria).build();
@@ -70,9 +64,7 @@ public class BasicWhereTest {
 	
 	@Test
 	public void shouldHaveNestedConditions() {
-		Criteria criteria = new Criteria(Person.class);
-		
-		criteria.where(like("nome", "a name"), and(greaterThan("idade", 18), or(lessThan("idade", 60))));
+		Criteria criteria = Criteria.from(Person.class).where(like("nome", "a name"), and(greaterThan("idade", 18), or(lessThan("idade", 60))));
 		
 		final String expected = "SELECT person FROM Person person WHERE person.nome LIKE ?1 AND (person.idade > ?2 OR person.idade < ?3)";
 		final String builded = new JPAQueryBuilder(criteria).build();

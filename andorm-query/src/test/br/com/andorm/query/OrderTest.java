@@ -13,9 +13,7 @@ public class OrderTest {
 
 	@Test
 	public void simpleOrderByAscTest() {
-		Criteria criteria = new Criteria(Person.class);
-		
-		criteria.where(like("nome", "a name")).orderAscBy("idade");
+		Criteria criteria = Criteria.from(Person.class).where(like("nome", "a name")).orderAscBy("idade");
 		
 		final String expected = "SELECT person FROM Person person WHERE person.nome LIKE ?1 ORDER BY person.idade ASC";
 		final String builded = new JPAQueryBuilder(criteria).build();
@@ -25,9 +23,7 @@ public class OrderTest {
 	
 	@Test
 	public void simpleOrderByDescTest() {
-		Criteria criteria = new Criteria(Person.class);
-		
-		criteria.where(like("nome", "a name")).orderDescBy("idade");
+		Criteria criteria = Criteria.from(Person.class).where(like("nome", "a name")).orderDescBy("idade");
 		
 		final String expected = "SELECT person FROM Person person WHERE person.nome LIKE ?1 ORDER BY person.idade DESC";
 		final String builded = new JPAQueryBuilder(criteria).build();
@@ -37,9 +33,7 @@ public class OrderTest {
 	
 	@Test
 	public void multipleOrderByAscTest() {
-		Criteria criteria = new Criteria(Person.class);
-		
-		criteria.where(like("nome", "a name")).orderAscBy("idade", "data_nascimento");
+		Criteria criteria = Criteria.from(Person.class).where(like("nome", "a name")).orderAscBy("idade", "data_nascimento");
 		
 		final String expected = "SELECT person FROM Person person WHERE person.nome LIKE ?1 ORDER BY person.idade ASC, person.data_nascimento ASC";
 		final String builded = new JPAQueryBuilder(criteria).build();
@@ -49,9 +43,7 @@ public class OrderTest {
 	
 	@Test
 	public void multipleOrderByDescTest() {
-		Criteria criteria = new Criteria(Person.class);
-		
-		criteria.where(like("nome", "a name")).orderDescBy("idade", "data_nascimento");
+		Criteria criteria = Criteria.from(Person.class).where(like("nome", "a name")).orderDescBy("idade", "data_nascimento");
 		
 		final String expected = "SELECT person FROM Person person WHERE person.nome LIKE ?1 ORDER BY person.idade DESC, person.data_nascimento DESC";
 		final String builded = new JPAQueryBuilder(criteria).build();
