@@ -1,6 +1,6 @@
 package br.com.andorm.test.persistence;
 
-import br.com.andorm.AndOrmConfiguration;
+import br.com.andorm.config.AndOrmConfiguration;
 import br.com.andorm.persistence.PersistenceManager;
 import br.com.andorm.persistence.PersistenceManagerFactory;
 import br.com.andorm.test.entity.BasicEntity;
@@ -12,7 +12,7 @@ public class BasicEntityPersistenceTest extends AndOrmPersistenceTestCase {
 	}
 	
 	private static PersistenceManager createPersistenceManager() {
-		AndOrmConfiguration conf = new AndOrmConfiguration("sdcard/andorm_db_test.sqlite");
+		AndOrmConfiguration conf = new AndOrmConfiguration(databasePath());
 		conf.addEntity(BasicEntity.class);
 		
 		return PersistenceManagerFactory.create(conf);

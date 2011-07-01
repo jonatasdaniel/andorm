@@ -15,14 +15,14 @@ public class DateTimePropertyTest extends AndroidTestCase {
 	private DateTimeProperty property;
 	
 	protected void setUp() throws Exception {
-		Field field = in(ObjectPropertyTest.class).returnField("dateAttr");
-		Method setMethod = in(ObjectPropertyTest.class).returnSetMethodOf(field);
-		Method getMethod = in(ObjectPropertyTest.class).returnGetMethodOf(field);
+		Field field = in(PropertyObject.class).returnField("dateAttr");
+		Method setMethod = in(PropertyObject.class).returnSetMethodOf(field);
+		Method getMethod = in(PropertyObject.class).returnGetMethodOf(field);
 		property = new DateTimeProperty("abc", field, getMethod, setMethod, TemporalType.DateTime);
 	}
 	
 	public void testAssignment() {
-		ObjectPropertyTest object = new ObjectPropertyTest();
+		PropertyObject object = new PropertyObject();
 		Long expected = new Date().getTime();
 		property.set(object, expected);
 		Long returned = (Long) property.get(object);

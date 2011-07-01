@@ -1,6 +1,7 @@
 package br.com.andorm.persistence;
 
 import static br.com.andorm.reflection.Reflactor.in;
+import static br.com.andorm.utils.NameResolver.toUnderscoreLowerCase;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,21 +11,25 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 import resources.ResourceBundleFactory;
-import br.com.andorm.AndOrmConfiguration;
 import br.com.andorm.AndOrmException;
 import br.com.andorm.AutoInc;
 import br.com.andorm.Column;
 import br.com.andorm.DateTime;
 import br.com.andorm.Entity;
+import br.com.andorm.Enumerated;
 import br.com.andorm.MappedSuperClass;
 import br.com.andorm.PrimaryKey;
 import br.com.andorm.Table;
 import br.com.andorm.Transient;
+import br.com.andorm.config.AndOrmConfiguration;
+import br.com.andorm.config.EntityConfiguration;
+import br.com.andorm.config.NameTypes;
 import br.com.andorm.persistence.property.DateTimeProperty;
+import br.com.andorm.persistence.property.EnumeratedProperty;
 import br.com.andorm.persistence.property.PrimaryKeyProperty;
 import br.com.andorm.persistence.property.Property;
+import br.com.andorm.types.EnumType;
 import br.com.andorm.types.TemporalType;
-import static br.com.andorm.utils.NameResolver.*;
 
 /**
  * 
@@ -43,19 +48,28 @@ public final class PersistenceManagerFactory {
 		AndroidPersistenceManager manager = new AndroidPersistenceManager(configuration.getDatabasePath());
 		PersistenceManagerCache persistenceManagerCache = new PersistenceManagerCache();
 		
-		for(Class<?> clazz : configuration.getEntities()) {
+		for(EntityConfiguration conf : configuration.getEntityConfigurations()) {
+			Class<?> clazz = conf.getEntityClass();
+			
 			if(!clazz.isAnnotationPresent(Entity.class))
 				throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), clazz.getName()));
 			
+			NameTypes nameTypes = conf.getNameTypes();
+			
 			String tableName = null;
-			if(clazz.isAnnotationPresent(Table.class))
+			if(clazz.isAnnotationPresent(Table.class)) {
 				tableName = clazz.getAnnotation(Table.class).value();
-			else
-				tableName = toUnderscoreLowerCase(clazz.getSimpleName());
+			} else {
+				if(nameTypes == NameTypes.Underscored) {
+					tableName = toUnderscoreLowerCase(clazz.getSimpleName());
+				} else {
+					tableName = clazz.getSimpleName();
+				}
+			}
 			
 			EntityCache cache = new EntityCache(clazz, tableName);
 			
-			reflectClass(clazz, cache);
+			reflectClass(clazz, cache, nameTypes);
 			
 			if(cache.getPk() == null)
 				throw new AndOrmException(MessageFormat.format(bundle.getString("has_not_a_pk"), clazz.getName()));
@@ -68,9 +82,9 @@ public final class PersistenceManagerFactory {
 		return manager;
 	}
 	
-	private static void reflectClass(Class<?> clazz, EntityCache cache) {
+	private static void reflectClass(Class<?> clazz, EntityCache cache, NameTypes nameTypes) {
 		if(clazz.getSuperclass().isAnnotationPresent(MappedSuperClass.class)) {
-			reflectClass(clazz.getSuperclass(), cache);
+			reflectClass(clazz.getSuperclass(), cache, nameTypes);
 		}
 		
 		for(Field field : clazz.getDeclaredFields()) {
@@ -91,15 +105,20 @@ public final class PersistenceManagerFactory {
 				nullable = field.getAnnotation(Column.class).nullable();
 			} 
 			
-			if(column == null || columnName == null)
-				columnName = toUnderscoreLowerCase(field.getName());
+			if(column == null || columnName == null) {
+				if(nameTypes == NameTypes.Underscored) {
+					columnName = toUnderscoreLowerCase(field.getName());
+				} else {
+					columnName = field.getName();
+				}
+			}
 			
 			Method setMethod = in(clazz).returnSetMethodOf(field);
 			Method getMethod = in(clazz).returnGetMethodOf(field);
 			
 			if(field.isAnnotationPresent(PrimaryKey.class)) {
 				boolean isAutoInc = field.isAnnotationPresent(AutoInc.class);
-				PrimaryKeyProperty pk = new PrimaryKeyProperty(columnName, field, getMethod, setMethod, isAutoInc, nullable);
+				PrimaryKeyProperty pk = new PrimaryKeyProperty(columnName, field, getMethod, setMethod, isAutoInc);
 				cache.setPk(pk);
 			} else if(field.getType() == Date.class || field.isAnnotationPresent(DateTime.class)) {
 				TemporalType type = TemporalType.Date;
@@ -113,6 +132,16 @@ public final class PersistenceManagerFactory {
 				
 				DateTimeProperty dateTimeProperty = new DateTimeProperty(columnName, field, getMethod, setMethod, type);
 				cache.add(dateTimeProperty);
+			} else if(field.getType() == Enum.class || field.isAnnotationPresent(Enumerated.class)) {
+				EnumType type = EnumType.Ordinal;
+				if(field.isAnnotationPresent(Enumerated.class)) {
+					Enumerated enumerated = field.getAnnotation(Enumerated.class);
+					type = enumerated.type();
+				}
+				
+				EnumeratedProperty property = new EnumeratedProperty(columnName, field, getMethod, setMethod, type);
+				cache.add(property);
+				
 			} else {
 				Property property = new Property(columnName, field, getMethod, setMethod, nullable);
 				

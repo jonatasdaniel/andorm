@@ -2,7 +2,7 @@ package br.com.andorm.test.persistence;
 
 import java.util.Date;
 
-import br.com.andorm.AndOrmConfiguration;
+import br.com.andorm.config.AndOrmConfiguration;
 import br.com.andorm.persistence.PersistenceManager;
 import br.com.andorm.persistence.PersistenceManagerFactory;
 import br.com.andorm.test.entity.DateTimeEntity;

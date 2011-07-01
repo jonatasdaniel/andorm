@@ -11,8 +11,9 @@ import java.util.ResourceBundle;
 
 import resources.ResourceBundleFactory;
 import android.test.AndroidTestCase;
-import br.com.andorm.AndOrmConfiguration;
 import br.com.andorm.AndOrmException;
+import br.com.andorm.config.AndOrmConfiguration;
+import br.com.andorm.config.NameTypes;
 import br.com.andorm.persistence.AndroidPersistenceManager;
 import br.com.andorm.persistence.EntityCache;
 import br.com.andorm.persistence.PersistenceManager;
@@ -37,8 +38,9 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 			PersistenceManagerFactory.create(conf);
 			fail("must throw a exception");
 		} catch (AndOrmException e) {
-			assertEquals(e.getMessage(), MessageFormat.format(bundle
-					.getString("is_not_a_entity"), Integer.class.getName()));
+			assertEquals(e.getMessage(), MessageFormat.format(
+					bundle.getString("is_not_a_entity"),
+					Integer.class.getName()));
 		}
 	}
 
@@ -47,9 +49,10 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 		conf.addEntity(PessoaFisica.class);
 
 		PersistenceManager manager = PersistenceManagerFactory.create(conf);
-		Field cacheField = in(AndroidPersistenceManager.class)
-				.returnField("cache");
-		PersistenceManagerCache managerCache = (PersistenceManagerCache) getFieldValue(manager, cacheField);
+		Field cacheField = in(AndroidPersistenceManager.class).returnField(
+				"cache");
+		PersistenceManagerCache managerCache = (PersistenceManagerCache) getFieldValue(
+				manager, cacheField);
 		EntityCache cache = managerCache.getEntityCache(PessoaFisica.class);
 
 		Property cpf = cache.getPropertyByField("cpf");
@@ -73,9 +76,10 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 		conf.addEntity(DateTimeEntity.class);
 
 		PersistenceManager manager = PersistenceManagerFactory.create(conf);
-		Field cacheField = in(AndroidPersistenceManager.class)
-				.returnField("cache");
-		PersistenceManagerCache managerCache = (PersistenceManagerCache) getFieldValue(manager, cacheField);
+		Field cacheField = in(AndroidPersistenceManager.class).returnField(
+				"cache");
+		PersistenceManagerCache managerCache = (PersistenceManagerCache) getFieldValue(
+				manager, cacheField);
 		EntityCache cache = managerCache.getEntityCache(DateTimeEntity.class);
 
 		DateTimeProperty registerDate = (DateTimeProperty) cache
@@ -90,9 +94,10 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 		conf.addEntity(AnnotatedDateTimeEntity.class);
 
 		PersistenceManager manager = PersistenceManagerFactory.create(conf);
-		Field cacheField = in(AndroidPersistenceManager.class)
-				.returnField("cache");
-		PersistenceManagerCache managerCache = (PersistenceManagerCache) getFieldValue(manager, cacheField);
+		Field cacheField = in(AndroidPersistenceManager.class).returnField(
+				"cache");
+		PersistenceManagerCache managerCache = (PersistenceManagerCache) getFieldValue(
+				manager, cacheField);
 		EntityCache cache = managerCache
 				.getEntityCache(AnnotatedDateTimeEntity.class);
 
@@ -103,6 +108,36 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 		assertEquals(TemporalType.DateTime, registerDate.getType());
 	}
 
+	public void testShouldHaveOriginalNameTypes() {
+		AndOrmConfiguration conf = new AndOrmConfiguration("path");
+		conf.addEntity(PessoaFisica.class, NameTypes.Original);
+
+		PersistenceManager manager = PersistenceManagerFactory.create(conf);
+		Field cacheField = in(AndroidPersistenceManager.class).returnField(
+				"cache");
+		PersistenceManagerCache managerCache = (PersistenceManagerCache) getFieldValue(
+				manager, cacheField);
+		EntityCache cache = managerCache.getEntityCache(PessoaFisica.class);
+
+		Property data = (Property) cache.getPropertyByField("dataCadastro");
+		assertEquals(data.getColumnName(), "dataCadastro");
+	}
+
+	public void testShouldHaveUnderscoredNameTypes() {
+		AndOrmConfiguration conf = new AndOrmConfiguration("path");
+		conf.addEntity(PessoaFisica.class, NameTypes.Underscored);
+
+		PersistenceManager manager = PersistenceManagerFactory.create(conf);
+		Field cacheField = in(AndroidPersistenceManager.class).returnField(
+				"cache");
+		PersistenceManagerCache managerCache = (PersistenceManagerCache) getFieldValue(
+				manager, cacheField);
+		EntityCache cache = managerCache.getEntityCache(PessoaFisica.class);
+
+		Property data = (Property) cache.getPropertyByField("dataCadastro");
+		assertEquals(data.getColumnName(), "data_cadastro");
+	}
+
 	public void testWrongDateTimeType() {
 		AndOrmConfiguration conf = new AndOrmConfiguration("path");
 		conf.addEntity(WrongDateTimeEntity.class);
@@ -110,9 +145,9 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 		try {
 			PersistenceManagerFactory.create(conf);
 		} catch (AndOrmException e) {
-			assertEquals(MessageFormat.format(bundle
-					.getString("wrong_date_time_type"), Calendar.class
-					.getCanonicalName()), e.getMessage());
+			assertEquals(MessageFormat.format(
+					bundle.getString("wrong_date_time_type"),
+					Calendar.class.getCanonicalName()), e.getMessage());
 		}
 	}
 

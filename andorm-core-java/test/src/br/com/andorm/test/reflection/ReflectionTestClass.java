@@ -1,5 +1,6 @@
 package br.com.andorm.test.reflection;
 
+@SuppressWarnings("all")
 public class ReflectionTestClass {
 
 	private String nome;

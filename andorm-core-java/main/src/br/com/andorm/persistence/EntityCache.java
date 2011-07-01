@@ -1,6 +1,5 @@
 package br.com.andorm.persistence;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,15 +17,15 @@ import br.com.andorm.persistence.property.Property;
  */
 public final class EntityCache {
 
-	private final Class<?>			entityClass;
-	private final String			tableName;
-	private PrimaryKeyProperty		pk;
+	private final Class<?> entityClass;
+	private final String tableName;
+	private PrimaryKeyProperty pk;
 
-	private List<String>			columns;
-	private List<String>			columnsWithoutAutoInc;
+	private List<String> columns;
+	private List<String> columnsWithoutAutoInc;
 
-	private Map<String, Property>	columnProperties;
-	private Map<String, Property>	fieldProperties;
+	private Map<String, Property> columnProperties;
+	private Map<String, Property> fieldProperties;
 
 	public EntityCache(Class<?> entityClass, String tableName) {
 		this.entityClass = entityClass;
@@ -49,9 +48,9 @@ public final class EntityCache {
 		columnProperties.put(property.getColumnName(), property);
 		fieldProperties.put(property.getField().getName(), property);
 
-		if(property instanceof PrimaryKeyProperty) {
+		if (property instanceof PrimaryKeyProperty) {
 			PrimaryKeyProperty pk = (PrimaryKeyProperty) property;
-			if(!pk.isAutoInc())
+			if (!pk.isAutoInc())
 				columnsWithoutAutoInc.add(pk.getColumnName());
 		} else {
 			columnsWithoutAutoInc.add(property.getColumnName());
@@ -85,4 +84,5 @@ public final class EntityCache {
 	public Class<?> getEntityClass() {
 		return entityClass;
 	}
+
 }

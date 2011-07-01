@@ -1,5 +1,7 @@
 package br.com.andorm.test.entity;
 
+import java.math.BigDecimal;
+
 import br.com.andorm.AutoInc;
 import br.com.andorm.Entity;
 import br.com.andorm.PrimaryKey;
@@ -12,6 +14,7 @@ public class BasicEntity {
 	private Integer id;
 	private String nome;
 	private String endereco;
+	private BigDecimal saldo;
 
 	public BasicEntity() {}
 	
@@ -43,6 +46,16 @@ public class BasicEntity {
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
 	}
+	
+	
+
+	public BigDecimal getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(BigDecimal saldo) {
+		this.saldo = saldo;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -62,6 +75,11 @@ public class BasicEntity {
 			if (other.nome != null)
 				return false;
 		} else if (!nome.equals(other.nome))
+			return false;
+		if (saldo == null) {
+			if (other.saldo != null)
+				return false;
+		} else if (!saldo.equals(other.saldo))
 			return false;
 		return true;
 	}

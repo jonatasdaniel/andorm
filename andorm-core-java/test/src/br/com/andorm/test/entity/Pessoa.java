@@ -1,6 +1,5 @@
 package br.com.andorm.test.entity;
 
-import br.com.andorm.AutoInc;
 import br.com.andorm.MappedSuperClass;
 import br.com.andorm.PrimaryKey;
 
@@ -8,7 +7,6 @@ import br.com.andorm.PrimaryKey;
 public class Pessoa {
 
 	@PrimaryKey
-	@AutoInc
 	private Integer id;
 	private String nome;
 	private String endereco;

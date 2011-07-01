@@ -16,14 +16,14 @@ public class PropertyTest extends AndroidTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		Field field = in(ObjectPropertyTest.class).returnField("simpleAttr");
-		Method setMethod = in(ObjectPropertyTest.class).returnSetMethodOf(field);
-		Method getMethod = in(ObjectPropertyTest.class).returnGetMethodOf(field);
+		Field field = in(PropertyObject.class).returnField("simpleAttr");
+		Method setMethod = in(PropertyObject.class).returnSetMethodOf(field);
+		Method getMethod = in(PropertyObject.class).returnGetMethodOf(field);
 		property = new Property("simple_attr", field, getMethod, setMethod);
 	}
 	
 	public void testAssignment() {
-		ObjectPropertyTest p = new ObjectPropertyTest();
+		PropertyObject p = new PropertyObject();
 		property.set(p, 15);
 		Object returned = property.get(p);
 		

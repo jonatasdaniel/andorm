@@ -25,4 +25,8 @@ public class AndOrmPersistenceTestCase extends AndroidTestCase {
 		manager.close();
 	}
 	
+	public static String databasePath() {
+		return "sdcard/andorm_db_test.sqlite";
+	}
+	
 }
