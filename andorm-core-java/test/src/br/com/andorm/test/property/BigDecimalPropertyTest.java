@@ -45,9 +45,9 @@ public class BigDecimalPropertyTest extends AndroidTestCase {
 		object.setBigDecimal(value);
 		
 		Double doubleValue = (Double) property.get(object);
-		assertEquals(doubleValue.doubleValue(), value.doubleValue());
+		assertEquals(doubleValue.intValue(), value.intValue());
 		
-		property.set(object, 34566d);
+		property.set(object, 34566);
 		BigDecimal newValue = object.getBigDecimal();
 		
 		assertEquals(newValue, value);
