@@ -1,5 +1,6 @@
 package br.com.andorm.persistence;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,13 @@ public final class EntityCache {
 	private final Class<?> entityClass;
 	private final String tableName;
 	private PrimaryKeyProperty pk;
+
+	private Method beforeSaveMethod;
+	private Method afterSaveMethod;
+	private Method beforeUpdateMethod;
+	private Method afterUpdateMethod;
+	private Method beforeDeleteMethod;
+	private Method afterDeleteMethod;
 
 	private List<String> columns;
 	private List<String> columnsWithoutAutoInc;
@@ -63,6 +71,54 @@ public final class EntityCache {
 
 	public Property getPropertyByField(String field) {
 		return fieldProperties.get(field);
+	}
+
+	public Method getBeforeSaveMethod() {
+		return beforeSaveMethod;
+	}
+
+	public void setBeforeSaveMethod(Method beforeSaveMethod) {
+		this.beforeSaveMethod = beforeSaveMethod;
+	}
+
+	public Method getAfterSaveMethod() {
+		return afterSaveMethod;
+	}
+
+	public void setAfterSaveMethod(Method afterSaveMethod) {
+		this.afterSaveMethod = afterSaveMethod;
+	}
+
+	public Method getBeforeUpdateMethod() {
+		return beforeUpdateMethod;
+	}
+
+	public void setBeforeUpdateMethod(Method beforeUpdateMethod) {
+		this.beforeUpdateMethod = beforeUpdateMethod;
+	}
+
+	public Method getAfterUpdateMethod() {
+		return afterUpdateMethod;
+	}
+
+	public void setAfterUpdateMethod(Method afterUpdateMethod) {
+		this.afterUpdateMethod = afterUpdateMethod;
+	}
+
+	public Method getBeforeDeleteMethod() {
+		return beforeDeleteMethod;
+	}
+
+	public void setBeforeDeleteMethod(Method beforeDeleteMethod) {
+		this.beforeDeleteMethod = beforeDeleteMethod;
+	}
+
+	public Method getAfterDeleteMethod() {
+		return afterDeleteMethod;
+	}
+
+	public void setAfterDeleteMethod(Method afterDeleteMethod) {
+		this.afterDeleteMethod = afterDeleteMethod;
 	}
 
 	public String getTableName() {

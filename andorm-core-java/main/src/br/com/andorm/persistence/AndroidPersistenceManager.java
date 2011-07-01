@@ -75,10 +75,18 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			}
 		}
 		
+		if(cache.getBeforeSaveMethod() != null) {
+			invoke(o, cache.getBeforeSaveMethod()).withoutParams();
+		}
+		
 		try {
 			database.insert(cache.getTableName(), null, values);
 		} catch(SQLException e) {
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("save_error"), o.getClass().getCanonicalName(), e.getMessage()));
+		}
+		
+		if(cache.getAfterSaveMethod() != null) {
+			invoke(o, cache.getAfterSaveMethod()).withoutParams();
 		}
 	}
 	
@@ -97,10 +105,18 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			throw new AndOrmException(MessageFormat.format(bundle.getString("id_null"), o.getClass().getCanonicalName()));
 		String[] whereArgs = {param.toString()};
 		
+		if(cache.getBeforeDeleteMethod() != null) {
+			invoke(o, cache.getBeforeDeleteMethod()).withoutParams();
+		}
+		
 		try {
 			database.delete(cache.getTableName(), whereClause, whereArgs);
 		} catch(SQLException e) {
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("delete_error"), o.getClass().getCanonicalName(), e.getMessage()));
+		}
+		
+		if(cache.getAfterDeleteMethod() != null) {
+			invoke(o, cache.getAfterDeleteMethod()).withoutParams();
 		}
 	}
 
@@ -133,10 +149,18 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			throw new AndOrmException(MessageFormat.format(bundle.getString("id_null"), o.getClass().getCanonicalName()));
 		String[] whereArgs = {param.toString()};
 		
+		if(cache.getBeforeUpdateMethod() != null) {
+			invoke(o, cache.getBeforeUpdateMethod()).withoutParams();
+		}
+		
 		try {
 			database.update(cache.getTableName(), values, whereClause, whereArgs);
 		} catch(SQLException e) {
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("save_error"), o.getClass().getCanonicalName(), e.getMessage()));
+		}
+		
+		if(cache.getAfterUpdateMethod() != null) {
+			invoke(o, cache.getAfterUpdateMethod()).withoutParams();
 		}
 	}
 
