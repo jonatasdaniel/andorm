@@ -11,8 +11,14 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 import resources.ResourceBundleFactory;
+import br.com.andorm.AfterDelete;
+import br.com.andorm.AfterSave;
+import br.com.andorm.AfterUpdate;
 import br.com.andorm.AndOrmException;
 import br.com.andorm.AutoInc;
+import br.com.andorm.BeforeDelete;
+import br.com.andorm.BeforeSave;
+import br.com.andorm.BeforeUpdate;
 import br.com.andorm.Column;
 import br.com.andorm.DateTime;
 import br.com.andorm.Entity;
@@ -69,7 +75,7 @@ public final class PersistenceManagerFactory {
 			
 			EntityCache cache = new EntityCache(clazz, tableName);
 			
-			reflectClass(clazz, cache, nameTypes);
+			reflectClass(clazz, cache, conf);
 			
 			if(cache.getPk() == null)
 				throw new AndOrmException(MessageFormat.format(bundle.getString("has_not_a_pk"), clazz.getName()));
@@ -82,9 +88,9 @@ public final class PersistenceManagerFactory {
 		return manager;
 	}
 	
-	private static void reflectClass(Class<?> clazz, EntityCache cache, NameTypes nameTypes) {
+	private static void reflectClass(Class<?> clazz, EntityCache cache, EntityConfiguration configuration) {
 		if(clazz.getSuperclass().isAnnotationPresent(MappedSuperClass.class)) {
-			reflectClass(clazz.getSuperclass(), cache, nameTypes);
+			reflectClass(clazz.getSuperclass(), cache, configuration);
 		}
 		
 		for(Field field : clazz.getDeclaredFields()) {
@@ -106,7 +112,7 @@ public final class PersistenceManagerFactory {
 			} 
 			
 			if(column == null || columnName == null) {
-				if(nameTypes == NameTypes.Underscored) {
+				if(configuration.getNameTypes() == NameTypes.Underscored) {
 					columnName = toUnderscoreLowerCase(field.getName());
 				} else {
 					columnName = field.getName();
@@ -146,6 +152,24 @@ public final class PersistenceManagerFactory {
 				Property property = new Property(columnName, field, getMethod, setMethod, nullable);
 				
 				cache.add(property);
+			}
+		}
+		
+		if(configuration.getVerifyOperationMethods()) {
+			for (Method method : clazz.getDeclaredMethods()) {
+				if(method.isAnnotationPresent(BeforeSave.class)) {
+					cache.setBeforeSaveMethod(method);
+				} else if(method.isAnnotationPresent(AfterSave.class)) {
+					cache.setAfterSaveMethod(method);
+				} else if(method.isAnnotationPresent(BeforeUpdate.class)) {
+					cache.setBeforeUpdateMethod(method);
+				} else if(method.isAnnotationPresent(AfterUpdate.class)) {
+					cache.setAfterUpdateMethod(method);
+				} else if(method.isAnnotationPresent(BeforeDelete.class)) {
+					cache.setBeforeDeleteMethod(method);
+				} else if(method.isAnnotationPresent(AfterDelete.class)) {
+					cache.setAfterDeleteMethod(method);
+				}
 			}
 		}
 	}
