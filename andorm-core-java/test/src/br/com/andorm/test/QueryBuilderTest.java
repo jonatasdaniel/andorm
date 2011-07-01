@@ -48,6 +48,34 @@ public class QueryBuilderTest extends AndroidTestCase {
 		assertNull(queryBuilder.orderBy());
 	}
 	
+	public void testSimpleOrderClause() {
+		Criteria criteria = new Criteria(BasicEntity.class);
+		criteria.orderAscBy("idade");
+		
+		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
+		queryBuilder.build();
+		
+		assertEquals("idade ASC", queryBuilder.orderBy());
+		assertNull(queryBuilder.whereArgs());
+		assertNull(queryBuilder.whereClause());
+		assertNull(queryBuilder.groupBy());
+		assertNull(queryBuilder.having());
+	}
+	
+	public void testMultipleOrderClause() {
+		Criteria criteria = new Criteria(BasicEntity.class);
+		criteria.orderAscBy("idade").orderDescBy("nota");
+		
+		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
+		queryBuilder.build();
+		
+		assertEquals("idade ASC, nota DESC", queryBuilder.orderBy());
+		assertNull(queryBuilder.whereArgs());
+		assertNull(queryBuilder.whereClause());
+		assertNull(queryBuilder.groupBy());
+		assertNull(queryBuilder.having());
+	}
+	
 	private EntityCache entityCache() {
 		EntityCache cache = new EntityCache(BasicEntity.class, "basic_client");
 		addIdProperty(cache);

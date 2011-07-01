@@ -9,6 +9,7 @@ import br.com.andorm.query.Condition;
 import br.com.andorm.query.Criteria;
 import br.com.andorm.query.LogicComparator;
 import br.com.andorm.query.LogicalOperator;
+import br.com.andorm.query.Order;
 import br.com.andorm.query.Restriction;
 
 
@@ -48,7 +49,25 @@ public class AndroidQueryBuilder {
 			}
 		}
 		
+		if(criteria.hasOrders()) {
+			orderBy = new StringBuilder();
+			int index = 0;
+			for (Order order : criteria.getOrders()) {
+				if(index > 0) {
+					orderBy.append(", ");
+				}
+				orderBy.append(buildOrder(order));
+				index++;
+			}
+		}
+		
 		return this;
+	}
+	
+	private String buildOrder(Order order) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(order.getBy()).append(" ").append(order.getType().name().toUpperCase());
+		return builder.toString();
 	}
 	
 	private void buildRestriction(Restriction restriction) {
