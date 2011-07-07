@@ -19,7 +19,7 @@ import static br.com.andorm.query.Restriction.*;
 public class QueryBuilderTest extends AndroidTestCase {
 	
 	public void testShouldHaveOneLikeClause() {
-		Criteria criteria = new Criteria(BasicEntity.class);
+		Criteria criteria = Criteria.from(BasicEntity.class);
 		criteria.where(like("nome", "joaozinho"));
 		
 		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
@@ -34,7 +34,7 @@ public class QueryBuilderTest extends AndroidTestCase {
 	}
 	
 	public void testShouldHaveOneMatchClause() {
-		Criteria criteria = new Criteria(BasicEntity.class);
+		Criteria criteria = Criteria.from(BasicEntity.class);
 		criteria.where(match("nome", "joaozinho"));
 		
 		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
@@ -49,7 +49,7 @@ public class QueryBuilderTest extends AndroidTestCase {
 	}
 	
 	public void testSimpleOrderClause() {
-		Criteria criteria = new Criteria(BasicEntity.class);
+		Criteria criteria = Criteria.from(BasicEntity.class);
 		criteria.orderAscBy("idade");
 		
 		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
@@ -63,7 +63,7 @@ public class QueryBuilderTest extends AndroidTestCase {
 	}
 	
 	public void testMultipleOrderClause() {
-		Criteria criteria = new Criteria(BasicEntity.class);
+		Criteria criteria = Criteria.from(BasicEntity.class);
 		criteria.orderAscBy("idade").orderDescBy("nota");
 		
 		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
@@ -73,6 +73,32 @@ public class QueryBuilderTest extends AndroidTestCase {
 		assertNull(queryBuilder.whereArgs());
 		assertNull(queryBuilder.whereClause());
 		assertNull(queryBuilder.groupBy());
+		assertNull(queryBuilder.having());
+	}
+	
+	public void testSimpleGroupClause() {
+		Criteria criteria = Criteria.from(BasicEntity.class).groupBy("idade");
+		
+		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
+		queryBuilder.build();
+		
+		assertEquals("idade", queryBuilder.groupBy());
+		assertNull(queryBuilder.whereArgs());
+		assertNull(queryBuilder.whereClause());
+		assertNull(queryBuilder.orderBy());
+		assertNull(queryBuilder.having());
+	}
+	
+	public void testMultipleGroupClause() {
+		Criteria criteria = Criteria.from(BasicEntity.class).groupBy("idade", "nome");
+		
+		AndroidQueryBuilder queryBuilder = new AndroidQueryBuilder(criteria, entityCache());
+		queryBuilder.build();
+		
+		assertEquals("idade, nome", queryBuilder.groupBy());
+		assertNull(queryBuilder.whereArgs());
+		assertNull(queryBuilder.whereClause());
+		assertNull(queryBuilder.orderBy());
 		assertNull(queryBuilder.having());
 	}
 	

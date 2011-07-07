@@ -5,6 +5,7 @@ import java.util.Map;
 
 import br.com.andorm.query.Condition;
 import br.com.andorm.query.Criteria;
+import br.com.andorm.query.Group;
 import br.com.andorm.query.LogicComparator;
 import br.com.andorm.query.LogicalOperator;
 import br.com.andorm.query.Order;
@@ -73,6 +74,16 @@ public class JPAQueryBuilder {
 			}
 		}
 		
+		if(criteria.hasGroups()) {
+			builder.append(" GROUP BY ");
+			int index = 1;
+			for(Group group : criteria.getGroups()) {
+				buildGroup(group);
+				if(index++ < criteria.getGroups().size())
+					builder.append(", ");
+			}
+		}
+		
 		return builder.toString().trim();
 	}
 	
@@ -100,5 +111,10 @@ public class JPAQueryBuilder {
 		builder.append(alias).append(".");
 		builder.append(o.getBy()).append(" ");
 		builder.append(o.getType().toString().toUpperCase());
+	}
+	
+	private void buildGroup(Group group) {
+		builder.append(alias).append(".");
+		builder.append(group.getBy());
 	}
 }

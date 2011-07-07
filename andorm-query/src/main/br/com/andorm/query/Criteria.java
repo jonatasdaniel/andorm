@@ -10,13 +10,15 @@ public final class Criteria {
 	private Restriction restriction;
 	private final List<Condition> conditions;
 	private final List<Order> orders;
+	private final List<Group> groups;
 
 	private Criteria(Class<?> clazz) {
 		this.clazz = clazz;
 		conditions = new ArrayList<Condition>();
 		orders = new ArrayList<Order>();
+		groups = new ArrayList<Group>();
 	}
-	
+
 	public static Criteria from(Class<?> clazz) {
 		return new Criteria(clazz);
 	}
@@ -32,25 +34,39 @@ public final class Criteria {
 	public Criteria where(Restriction restriction, Condition... conditions) {
 		this.restriction = restriction;
 		this.conditions.addAll(Arrays.asList(conditions));
-		
+
 		return this;
 	}
-	
+
 	public void addOrder(Order order) {
 		orders.add(order);
 	}
-	
+
+	public void addGroup(Group group) {
+		groups.add(group);
+	}
+
 	public Criteria orderAscBy(String... fields) {
-		for(String field : fields)
-			orders.add(new Order(field, OrderType.Asc));
-		
+		for (String field : fields) {
+			addOrder(new Order(field, OrderType.Asc));
+		}
+
 		return this;
 	}
-	
+
 	public Criteria orderDescBy(String... fields) {
-		for(String field : fields)
-			orders.add(new Order(field, OrderType.Desc));
-		
+		for (String field : fields) {
+			addOrder(new Order(field, OrderType.Desc));
+		}
+
+		return this;
+	}
+
+	public Criteria groupBy(String... fields) {
+		for (String field : fields) {
+			addGroup(new Group(field));
+		}
+
 		return this;
 	}
 
@@ -67,15 +83,23 @@ public final class Criteria {
 	}
 
 	public boolean hasConditions() {
-		return conditions.size() > 0;
+		return !conditions.isEmpty();
 	}
-	
+
 	public boolean hasOrders() {
-		return orders.size() > 0;
+		return !orders.isEmpty();
+	}
+
+	public boolean hasGroups() {
+		return !groups.isEmpty();
 	}
 
 	public List<Order> getOrders() {
 		return orders;
+	}
+
+	public List<Group> getGroups() {
+		return groups;
 	}
 
 	public List<Object> getParameters() {
@@ -83,8 +107,8 @@ public final class Criteria {
 
 		if (restriction != null)
 			addParam(params, restriction);
-		if(hasConditions())
-			for(Condition c : getConditions())
+		if (hasConditions())
+			for (Condition c : getConditions())
 				addParam(params, c.getRestriction());
 
 		return params;

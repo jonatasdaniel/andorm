@@ -7,6 +7,7 @@ import java.util.Map;
 
 import br.com.andorm.query.Condition;
 import br.com.andorm.query.Criteria;
+import br.com.andorm.query.Group;
 import br.com.andorm.query.LogicComparator;
 import br.com.andorm.query.LogicalOperator;
 import br.com.andorm.query.Order;
@@ -61,12 +62,30 @@ public class AndroidQueryBuilder {
 			}
 		}
 		
+		if(criteria.hasGroups()) {
+			groupBy = new StringBuilder();
+			int index = 0;
+			for (Group group : criteria.getGroups()) {
+				if(index > 0) {
+					groupBy.append(", ");
+				}
+				groupBy.append(buildGroup(group));
+				index++;
+			}
+		}
+		
 		return this;
 	}
 	
 	private String buildOrder(Order order) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(order.getBy()).append(" ").append(order.getType().name().toUpperCase());
+		return builder.toString();
+	}
+	
+	private String buildGroup(Group group) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(group.getBy());
 		return builder.toString();
 	}
 	
