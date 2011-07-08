@@ -30,6 +30,7 @@ import br.com.andorm.Transient;
 import br.com.andorm.config.AndOrmConfiguration;
 import br.com.andorm.config.EntityConfiguration;
 import br.com.andorm.config.NameTypes;
+import br.com.andorm.persistence.property.BooleanProperty;
 import br.com.andorm.persistence.property.DateTimeProperty;
 import br.com.andorm.persistence.property.EnumeratedProperty;
 import br.com.andorm.persistence.property.PrimaryKeyProperty;
@@ -94,7 +95,7 @@ public final class PersistenceManagerFactory {
 		}
 		
 		for(Field field : clazz.getDeclaredFields()) {
-			if(Modifier.isStatic(field.getModifiers()) || field.isAnnotationPresent(Transient.class))
+			if(Modifier.isStatic(field.getModifiers()) || Modifier.isFinal(field.getModifiers()) || field.isAnnotationPresent(Transient.class))
 				continue;
 			String columnName = null;
 			boolean nullable = true;
@@ -148,6 +149,10 @@ public final class PersistenceManagerFactory {
 				EnumeratedProperty property = new EnumeratedProperty(columnName, field, getMethod, setMethod, type);
 				cache.add(property);
 				
+			} else if(field.getType() == Boolean.class) {
+				BooleanProperty property = new BooleanProperty(columnName, field, getMethod, setMethod, nullable);
+				
+				cache.add(property);
 			} else {
 				Property property = new Property(columnName, field, getMethod, setMethod, nullable);
 				

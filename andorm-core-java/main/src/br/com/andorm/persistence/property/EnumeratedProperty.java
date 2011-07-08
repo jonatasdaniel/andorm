@@ -13,13 +13,13 @@ public class EnumeratedProperty extends Property {
 	
 	public EnumeratedProperty(String columnName, Field field, Method getMethod,
 			Method setMethod, EnumType type) {
-		super(columnName, field, getMethod, setMethod);
+		super(columnName, field, getMethod, setMethod, true, type == EnumType.Ordinal ? Integer.class : String.class);
 		this.type = type;
 	}
 
 	public EnumeratedProperty(String columnName, Field field, Method getMethod,
 			Method setMethod, boolean nullable, EnumType type) {
-		super(columnName, field, getMethod, setMethod, nullable);
+		super(columnName, field, getMethod, setMethod, nullable, type == EnumType.Ordinal ? Integer.class : String.class);
 		this.type = type;
 	}
 	

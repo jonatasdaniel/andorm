@@ -59,6 +59,10 @@ public interface PersistenceManager {
 	 */
 	<T> T read(Class<T> entityClass, Object pk);
 	
+	<T> T first(Class<T> entityClass);
+	
+	<T> T last(Class<T> entityClass);
+	
 	public <T> List<T> find(Class<T> entityClass, Criteria query); 
 	
 	Transaction getTransaction();

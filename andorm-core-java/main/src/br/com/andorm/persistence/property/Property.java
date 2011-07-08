@@ -19,17 +19,26 @@ public class Property {
 	private final Method setMethod;
 	private final Method getMethod;
 	private final boolean nullable;
+	private final Class<?> databaseFieldType;
 
-	public Property(String columnName, Field field, Method getMethod, Method setMethod) {
+	public Property(String columnName, Field field, Method getMethod,
+			Method setMethod) {
 		this(columnName, field, getMethod, setMethod, true);
 	}
 
-	public Property(String columnName, Field field, Method getMethod, Method setMethod, boolean nullable) {
+	public Property(String columnName, Field field, Method getMethod,
+			Method setMethod, boolean nullable) {
+		this(columnName, field, getMethod, setMethod, nullable, field.getType());
+	}
+
+	public Property(String columnName, Field field, Method getMethod,
+			Method setMethod, boolean nullable, Class<?> databaseFieldType) {
 		this.columnName = columnName;
 		this.field = field;
 		this.setMethod = setMethod;
 		this.getMethod = getMethod;
 		this.nullable = nullable;
+		this.databaseFieldType = databaseFieldType;
 	}
 
 	public Object get(Object of) {
@@ -58,6 +67,10 @@ public class Property {
 
 	public boolean isNullable() {
 		return nullable;
+	}
+
+	public Class<?> getDatabaseFieldType() {
+		return databaseFieldType;
 	}
 
 }

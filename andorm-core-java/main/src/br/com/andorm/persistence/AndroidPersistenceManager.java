@@ -66,21 +66,17 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			Property property = cache.getPropertyByColumn(column);
 			Object param = property.get(o);
 			
-			if(param != null) {
-				Method putMethod = this.cache.getContentValuesHelper().getMethod(param.getClass());
-				invoke(values, putMethod).withParams(column, param);
-			} else {
-				Method putMethod = this.cache.getContentValuesHelper().getPutNullMethod();
-				invoke(values, putMethod).withParams(column);
-			}
+			Method putMethod = this.cache.getContentValuesHelper().getMethod(property.getDatabaseFieldType());
+			invoke(values, putMethod).withParams(column, param);
 		}
 		
 		if(cache.getBeforeSaveMethod() != null) {
 			invoke(o, cache.getBeforeSaveMethod()).withoutParams();
 		}
 		
+		String tableName = cache.getTableName();
 		try {
-			database.insert(cache.getTableName(), null, values);
+			database.insert(tableName, null, values);
 		} catch(SQLException e) {
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("save_error"), o.getClass().getCanonicalName(), e.getMessage()));
 		}
@@ -109,8 +105,9 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			invoke(o, cache.getBeforeDeleteMethod()).withoutParams();
 		}
 		
+		String tableName = cache.getTableName();
 		try {
-			database.delete(cache.getTableName(), whereClause, whereArgs);
+			database.delete(tableName, whereClause, whereArgs);
 		} catch(SQLException e) {
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("delete_error"), o.getClass().getCanonicalName(), e.getMessage()));
 		}
@@ -133,13 +130,8 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			Property property = cache.getPropertyByColumn(column);
 			Object param = property.get(o);
 			
-			if(param != null) {
-				Method putMethod = this.cache.getContentValuesHelper().getMethod(param.getClass());
-				invoke(values, putMethod).withParams(column, param);
-			} else {
-				Method putMethod = this.cache.getContentValuesHelper().getPutNullMethod();
-				invoke(values, putMethod).withParams(column);
-			}
+			Method putMethod = this.cache.getContentValuesHelper().getMethod(property.getDatabaseFieldType());
+			invoke(values, putMethod).withParams(column, param);
 		}
 		
 		//alter here when change to composite primary key
@@ -153,8 +145,9 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			invoke(o, cache.getBeforeUpdateMethod()).withoutParams();
 		}
 		
+		String tableName = cache.getTableName();
 		try {
-			database.update(cache.getTableName(), values, whereClause, whereArgs);
+			database.update(tableName, values, whereClause, whereArgs);
 		} catch(SQLException e) {
 			throw new AndOrmPersistenceException(MessageFormat.format(bundle.getString("save_error"), o.getClass().getCanonicalName(), e.getMessage()));
 		}
@@ -195,12 +188,11 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			int columnIndex = cursor.getColumnIndex(column);
 			
 			Property property = entityCache.getPropertyByColumn(column);
-			Method setMethod = property.getSetMethod();
 			
 			if(cursor.isNull(columnIndex)) {
 				property.set(object, null);
 			} else {
-				Class<?> type = setMethod.getParameterTypes()[0];
+				Class<?> type = property.getDatabaseFieldType();
 				
 				Method cursorMethod = cache.getCursorHelper().getMethod(type);
 				Object param = invoke(cursor, cursorMethod).withParams(columnIndex);
@@ -260,6 +252,9 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			} while(cursor.moveToNext());
 		}
 		
+		cursor.close();
+		close();
+		
 		return list;
 	}
 
@@ -286,6 +281,54 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	@Override
 	public boolean isOpen() {
 		return database != null && database.isOpen();
+	}
+
+	@Override
+	public <T> T first(Class<T> of) {
+		if(!isOpen())
+			open();
+		EntityCache cache = this.cache.getEntityCache(of);
+		if(cache == null)
+			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), of.getCanonicalName()));
+
+		Cursor cursor = null;
+		String limit = "1";
+		try {
+			cursor = database.query(cache.getTableName(), null, null, null, null, null, null, limit);
+		} catch(SQLiteException e) {
+			throw new AndOrmPersistenceException(MessageFormat.format("read_error", of.getCanonicalName(), e.getMessage()));
+		}
+		
+		if(cursor.moveToFirst()) {
+			T object = Reflactor.newInstance(of);
+			inflate(cursor, object, cache);
+			return object;
+		} else
+			return null;
+	}
+
+	@Override
+	public <T> T last(Class<T> of) {
+		if(!isOpen())
+			open();
+		EntityCache cache = this.cache.getEntityCache(of);
+		if(cache == null)
+			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), of.getCanonicalName()));
+
+		Cursor cursor = null;
+		String limit = "1";
+		try {
+			cursor = database.query(cache.getTableName(), null, null, null, null, null, null, limit);
+		} catch(SQLiteException e) {
+			throw new AndOrmPersistenceException(MessageFormat.format("read_error", of.getCanonicalName(), e.getMessage()));
+		}
+		
+		if(cursor.moveToLast()) {
+			T object = Reflactor.newInstance(of);
+			inflate(cursor, object, cache);
+			return object;
+		} else
+			return null;
 	}
 
 }
