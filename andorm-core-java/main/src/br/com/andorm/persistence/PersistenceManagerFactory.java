@@ -6,6 +6,7 @@ import static br.com.andorm.utils.NameResolver.toUnderscoreLowerCase;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -30,6 +31,7 @@ import br.com.andorm.Transient;
 import br.com.andorm.config.AndOrmConfiguration;
 import br.com.andorm.config.EntityConfiguration;
 import br.com.andorm.config.NameTypes;
+import br.com.andorm.persistence.property.BigDecimalProperty;
 import br.com.andorm.persistence.property.BooleanProperty;
 import br.com.andorm.persistence.property.DateTimeProperty;
 import br.com.andorm.persistence.property.EnumeratedProperty;
@@ -74,7 +76,7 @@ public final class PersistenceManagerFactory {
 				}
 			}
 			
-			EntityCache cache = new EntityCache(clazz, tableName);
+			EntityCache cache = new EntityCache(clazz, tableName, conf.getProvider());
 			
 			reflectClass(clazz, cache, conf);
 			
@@ -151,6 +153,10 @@ public final class PersistenceManagerFactory {
 				
 			} else if(field.getType() == Boolean.class) {
 				BooleanProperty property = new BooleanProperty(columnName, field, getMethod, setMethod, nullable);
+				
+				cache.add(property);
+			} else if(field.getType() == BigDecimal.class) {
+				BigDecimalProperty property = new BigDecimalProperty(columnName, field, getMethod, setMethod, nullable);
 				
 				cache.add(property);
 			} else {

@@ -20,7 +20,7 @@ public class ContentValuesHelper {
 	}
 
 	private void createMethods() {
-		addMethod(Boolean.class);
+		addMethod(Integer.class, Boolean.class);
 		addMethod(Double.class);
 		addMethod(Float.class);
 		addMethod(Integer.class);
@@ -28,14 +28,16 @@ public class ContentValuesHelper {
 		addMethod(Short.class);
 		addMethod(String.class);
 
-		putNullMethod = in(ContentValues.class)
-				.returnMethod("putNull", String.class);
+		putNullMethod = in(ContentValues.class).returnMethod("putNull", String.class);
 	}
 
 	private void addMethod(Class<?> paramType) {
-		Method method = in(ContentValues.class)
-				.returnMethod("put", String.class, paramType);
-		methods.put(paramType, method);
+		addMethod(paramType, paramType);
+	}
+
+	private void addMethod(Class<?> paramType, Class<?> key) {
+		Method method = in(ContentValues.class).returnMethod("put", String.class, paramType);
+		methods.put(key, method);
 	}
 
 	public Method getMethod(Class<?> paramType) {

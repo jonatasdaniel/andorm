@@ -8,12 +8,12 @@ public class BigDecimalProperty extends Property {
 
 	public BigDecimalProperty(String columnName, Field field, Method getMethod,
 			Method setMethod) {
-		super(columnName, field, getMethod, setMethod);
+		super(columnName, field, getMethod, setMethod, true, Double.class);
 	}
 
 	public BigDecimalProperty(String columnName, Field field, Method getMethod,
 			Method setMethod, boolean nullable) {
-		super(columnName, field, getMethod, setMethod, nullable);
+		super(columnName, field, getMethod, setMethod, nullable, Double.class);
 	}
 	
 	@Override
