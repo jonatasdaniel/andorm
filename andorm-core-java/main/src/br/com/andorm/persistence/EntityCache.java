@@ -8,6 +8,7 @@ import java.util.Map;
 
 import br.com.andorm.persistence.property.PrimaryKeyProperty;
 import br.com.andorm.persistence.property.Property;
+import br.com.andorm.provider.Provider;
 
 /**
  * 
@@ -22,6 +23,8 @@ public final class EntityCache {
 	private final String tableName;
 	private PrimaryKeyProperty pk;
 
+	private final Provider provider;
+	
 	private Method beforeSaveMethod;
 	private Method afterSaveMethod;
 	private Method beforeUpdateMethod;
@@ -35,9 +38,10 @@ public final class EntityCache {
 	private Map<String, Property> columnProperties;
 	private Map<String, Property> fieldProperties;
 
-	public EntityCache(Class<?> entityClass, String tableName) {
+	public EntityCache(Class<?> entityClass, String tableName, Provider provider) {
 		this.entityClass = entityClass;
 		this.tableName = tableName;
+		this.provider = provider;
 
 		columns = new ArrayList<String>();
 		columnProperties = new HashMap<String, Property>();
@@ -139,6 +143,10 @@ public final class EntityCache {
 
 	public Class<?> getEntityClass() {
 		return entityClass;
+	}
+
+	public Provider getProvider() {
+		return provider;
 	}
 
 }

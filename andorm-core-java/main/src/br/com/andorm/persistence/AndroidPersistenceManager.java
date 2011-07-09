@@ -18,8 +18,8 @@ import android.database.sqlite.SQLiteException;
 import br.com.andorm.AndOrmException;
 import br.com.andorm.persistence.property.Property;
 import br.com.andorm.persistence.tablemanager.TableManager;
+import br.com.andorm.provider.Provider;
 import br.com.andorm.query.Criteria;
-import br.com.andorm.reflection.Reflactor;
 
 /**
  * 
@@ -175,8 +175,9 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			throw new AndOrmPersistenceException(MessageFormat.format("read_error", entityClass.getCanonicalName(), e.getMessage()));
 		}
 		
+		Provider provider = cache.getProvider();
 		if(cursor.moveToFirst()) {
-			T object = Reflactor.newInstance(entityClass);
+			T object = provider.newInstanceOf(entityClass);
 			inflate(cursor, object, cache);
 			return object;
 		} else
@@ -243,10 +244,10 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		List<T> list = new ArrayList<T>();
 		
+		Provider provider = cache.getProvider();
 		if(cursor.moveToFirst()) {
 			do {
-				@SuppressWarnings("all")
-				T object = (T) Reflactor.newInstance(query.getClazz());
+				T object = provider.newInstanceOf(entityClass);
 				inflate(cursor, object, cache);
 				list.add(object);
 			} while(cursor.moveToNext());
@@ -299,8 +300,9 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			throw new AndOrmPersistenceException(MessageFormat.format("read_error", of.getCanonicalName(), e.getMessage()));
 		}
 		
+		Provider provider = cache.getProvider();
 		if(cursor.moveToFirst()) {
-			T object = Reflactor.newInstance(of);
+			T object = provider.newInstanceOf(of);
 			inflate(cursor, object, cache);
 			return object;
 		} else
@@ -323,8 +325,9 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			throw new AndOrmPersistenceException(MessageFormat.format("read_error", of.getCanonicalName(), e.getMessage()));
 		}
 		
+		Provider provider = cache.getProvider();
 		if(cursor.moveToLast()) {
-			T object = Reflactor.newInstance(of);
+			T object = provider.newInstanceOf(of);
 			inflate(cursor, object, cache);
 			return object;
 		} else

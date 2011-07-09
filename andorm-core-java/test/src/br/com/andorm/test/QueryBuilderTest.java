@@ -11,6 +11,7 @@ import br.com.andorm.persistence.AndroidQueryBuilder;
 import br.com.andorm.persistence.EntityCache;
 import br.com.andorm.persistence.property.PrimaryKeyProperty;
 import br.com.andorm.persistence.property.Property;
+import br.com.andorm.provider.DefaultProvider;
 import br.com.andorm.query.Criteria;
 import br.com.andorm.test.entity.BasicEntity;
 
@@ -103,7 +104,7 @@ public class QueryBuilderTest extends AndroidTestCase {
 	}
 	
 	private EntityCache entityCache() {
-		EntityCache cache = new EntityCache(BasicEntity.class, "basic_client");
+		EntityCache cache = new EntityCache(BasicEntity.class, "basic_client", new DefaultProvider());
 		addIdProperty(cache);
 		addNomeProperty(cache);
 		addEnderecoProperty(cache);
