@@ -4,7 +4,4 @@ andorm-core-java/main/bin/*
 andorm-core-java/test/bin/*
 andorm-core-java/main/gen/*
 andorm-core-java/test/gen/*
-andorm-core-java/main/.project
-andorm-core-java/test/.project
 andorm-core-java/main/.classpath
-andorm-core-java/test/.project
