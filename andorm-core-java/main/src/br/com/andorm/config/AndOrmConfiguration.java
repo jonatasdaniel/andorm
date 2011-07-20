@@ -23,23 +23,19 @@ public class AndOrmConfiguration {
 
 	public AndOrmConfiguration(String databasePath) {
 		entityConfigurations = new ArrayList<EntityConfiguration>();
-		if (databasePath != null)
+		if (databasePath != null && databasePath.length() > 0)
 			this.databasePath = databasePath;
 		else
 			throw new AndOrmException(bundle.getString("invalid_database_path"));
 	}
 
 	public void addEntity(Class<?> entityClass) {
-		addEntity(entityClass, NameTypes.Underscored);
+		EntityConfiguration configuration = new EntityConfiguration(entityClass);
+		addEntity(configuration);
 	}
 
-	public void addEntity(Class<?> entityClass, NameTypes nameType) {
-		entityConfigurations
-				.add(new EntityConfiguration(entityClass, nameType));
-	}
-
-	public void addEntity(EntityConfiguration entity) {
-		entityConfigurations.add(entity);
+	public void addEntity(EntityConfiguration configuration) {
+		entityConfigurations.add(configuration);
 	}
 
 	public String getDatabasePath() {

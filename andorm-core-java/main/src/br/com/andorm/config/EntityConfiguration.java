@@ -1,11 +1,19 @@
 package br.com.andorm.config;
 
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+
+import resources.ResourceBundleFactory;
+
+import br.com.andorm.AndOrmException;
 import br.com.andorm.provider.DefaultProvider;
 import br.com.andorm.provider.Provider;
 
 public class EntityConfiguration {
 
-	private Class<?> entityClass;
+	private final ResourceBundle bundle = ResourceBundleFactory.get();
+	
+	private final Class<?> entityClass;
 	private NameTypes nameTypes;
 	private Boolean verifyOperationMethods;
 	private Provider provider;
@@ -20,7 +28,7 @@ public class EntityConfiguration {
 
 	public EntityConfiguration(Class<?> entityClass, NameTypes nameTypes,
 			Boolean verifyOperationMethods) {
-		this(entityClass, NameTypes.Underscored, verifyOperationMethods,
+		this(entityClass, nameTypes, verifyOperationMethods,
 				new DefaultProvider());
 	}
 
@@ -36,20 +44,32 @@ public class EntityConfiguration {
 
 	public EntityConfiguration(Class<?> entityClass, NameTypes nameTypes,
 			Boolean verifyOperationMethods, Provider provider) {
-		this.entityClass = entityClass;
-		this.nameTypes = nameTypes;
-		this.verifyOperationMethods = verifyOperationMethods;
-		this.provider = provider;
+		if(entityClass != null) {
+			this.entityClass = entityClass;
+		} else {
+			throw new AndOrmException(MessageFormat.format(bundle.getString("null_param"), "entityClass"));
+		}
+		if(nameTypes != null) {
+			this.nameTypes = nameTypes;
+		} else {
+			throw new AndOrmException(MessageFormat.format(bundle.getString("null_param"), "nameTypes"));
+		}
+		if(verifyOperationMethods != null) {
+			this.verifyOperationMethods = verifyOperationMethods;
+		} else {
+			throw new AndOrmException(MessageFormat.format(bundle.getString("null_param"), "verifyOperationMethods"));
+		}
+		if(provider != null) {
+			this.provider = provider;
+		} else {
+			throw new AndOrmException(MessageFormat.format(bundle.getString("null_param"), "provider"));
+		}
 	}
 
 	public Class<?> getEntityClass() {
 		return entityClass;
 	}
-
-	public void setEntityClass(Class<?> entityClass) {
-		this.entityClass = entityClass;
-	}
-
+	
 	public NameTypes getNameTypes() {
 		return nameTypes;
 	}
