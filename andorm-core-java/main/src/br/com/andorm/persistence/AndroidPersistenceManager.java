@@ -16,6 +16,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import br.com.andorm.AndOrmException;
+import br.com.andorm.binder.ObjectBinder;
 import br.com.andorm.persistence.property.Property;
 import br.com.andorm.persistence.tablemanager.TableManager;
 import br.com.andorm.provider.Provider;
@@ -176,31 +177,13 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		}
 		
 		Provider provider = cache.getProvider();
+		ObjectBinder binder = new ObjectBinder(this.cache.getCursorHelper(), cache, cursor);
 		if(cursor.moveToFirst()) {
 			T object = provider.newInstanceOf(entityClass);
-			inflate(cursor, object, cache);
+			binder.bind(object);
 			return object;
 		} else
 			return null;
-	}
-
-	private void inflate(Cursor cursor, Object object, EntityCache entityCache) { 
-		for(String column : entityCache.getColumns()) {
-			int columnIndex = cursor.getColumnIndex(column);
-			
-			Property property = entityCache.getPropertyByColumn(column);
-			
-			if(cursor.isNull(columnIndex)) {
-				property.set(object, null);
-			} else {
-				Class<?> type = property.getDatabaseFieldType();
-				
-				Method cursorMethod = cache.getCursorHelper().getMethod(type);
-				Object param = invoke(cursor, cursorMethod).withParams(columnIndex);
-				
-				property.set(object, param);
-			}
-		}
 	}
 	
 	protected void setCache(PersistenceManagerCache cache) {
@@ -245,10 +228,11 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		List<T> list = new ArrayList<T>();
 		
 		Provider provider = cache.getProvider();
+		ObjectBinder binder = new ObjectBinder(this.cache.getCursorHelper(), cache, cursor);
 		if(cursor.moveToFirst()) {
 			do {
 				T object = provider.newInstanceOf(entityClass);
-				inflate(cursor, object, cache);
+				binder.bind(object);
 				list.add(object);
 			} while(cursor.moveToNext());
 		}
@@ -301,9 +285,10 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		}
 		
 		Provider provider = cache.getProvider();
+		ObjectBinder binder = new ObjectBinder(this.cache.getCursorHelper(), cache, cursor);
 		if(cursor.moveToFirst()) {
 			T object = provider.newInstanceOf(of);
-			inflate(cursor, object, cache);
+			binder.bind(object);
 			return object;
 		} else
 			return null;
@@ -326,9 +311,10 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		}
 		
 		Provider provider = cache.getProvider();
+		ObjectBinder binder = new ObjectBinder(this.cache.getCursorHelper(), cache, cursor);
 		if(cursor.moveToLast()) {
 			T object = provider.newInstanceOf(of);
-			inflate(cursor, object, cache);
+			binder.bind(object);
 			return object;
 		} else
 			return null;
@@ -358,10 +344,11 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		List<T> list = new ArrayList<T>();
 		
 		Provider provider = cache.getProvider();
+		ObjectBinder binder = new ObjectBinder(this.cache.getCursorHelper(), cache, cursor);
 		if(cursor.moveToFirst()) {
 			do {
 				T object = provider.newInstanceOf(entityClass);
-				inflate(cursor, object, cache);
+				binder.bind(object);
 				list.add(object);
 			} while(cursor.moveToNext());
 		}
