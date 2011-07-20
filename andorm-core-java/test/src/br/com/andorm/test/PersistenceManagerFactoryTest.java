@@ -13,6 +13,7 @@ import resources.ResourceBundleFactory;
 import android.test.AndroidTestCase;
 import br.com.andorm.AndOrmException;
 import br.com.andorm.config.AndOrmConfiguration;
+import br.com.andorm.config.EntityConfiguration;
 import br.com.andorm.config.NameTypes;
 import br.com.andorm.persistence.AndroidPersistenceManager;
 import br.com.andorm.persistence.EntityCache;
@@ -110,7 +111,7 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 
 	public void testShouldHaveOriginalNameTypes() {
 		AndOrmConfiguration conf = new AndOrmConfiguration("path");
-		conf.addEntity(PessoaFisica.class, NameTypes.Original);
+		conf.addEntity(new EntityConfiguration(PessoaFisica.class, NameTypes.Original));
 
 		PersistenceManager manager = PersistenceManagerFactory.create(conf);
 		Field cacheField = in(AndroidPersistenceManager.class).returnField(
@@ -125,7 +126,7 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 
 	public void testShouldHaveUnderscoredNameTypes() {
 		AndOrmConfiguration conf = new AndOrmConfiguration("path");
-		conf.addEntity(PessoaFisica.class, NameTypes.Underscored);
+		conf.addEntity(new EntityConfiguration(PessoaFisica.class, NameTypes.Underscored));
 
 		PersistenceManager manager = PersistenceManagerFactory.create(conf);
 		Field cacheField = in(AndroidPersistenceManager.class).returnField(
