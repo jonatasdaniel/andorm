@@ -63,7 +63,11 @@ public interface PersistenceManager {
 	
 	<T> T last(Class<T> entityClass);
 	
-	public <T> List<T> find(Class<T> entityClass, Criteria query); 
+	public <T> List<T> find(Class<T> entityClass, Criteria query);
+	
+	public <T> List<T> find(Class<T> entityClass, String query);
+	
+	public <T> List<T> find(Class<T> entityClass, String query, Object... whereArgs);
 	
 	Transaction getTransaction();
 	

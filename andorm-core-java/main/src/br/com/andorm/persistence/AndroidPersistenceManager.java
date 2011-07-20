@@ -334,4 +334,42 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			return null;
 	}
 
+	@Override
+	public <T> List<T> find(Class<T> entityClass, String query) {
+		return find(entityClass, query, new Object[] {});
+	}
+
+	@Override
+	public <T> List<T> find(Class<T> entityClass, String query, Object... whereArgs) {
+		if(!isOpen())
+			open();
+		EntityCache cache = this.cache.getEntityCache(entityClass);
+		if(cache == null)
+			throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), entityClass.getCanonicalName()));
+		
+		String[] selectionArgs = new String[whereArgs.length];
+		for (int i = 0; i < whereArgs.length; i++) {
+			Object arg = whereArgs[i];
+			selectionArgs[i] = String.valueOf(arg);
+		}
+		
+		Cursor cursor = database.rawQuery(query, selectionArgs);
+		
+		List<T> list = new ArrayList<T>();
+		
+		Provider provider = cache.getProvider();
+		if(cursor.moveToFirst()) {
+			do {
+				T object = provider.newInstanceOf(entityClass);
+				inflate(cursor, object, cache);
+				list.add(object);
+			} while(cursor.moveToNext());
+		}
+		
+		cursor.close();
+		close();
+		
+		return list;
+	}
+
 }
