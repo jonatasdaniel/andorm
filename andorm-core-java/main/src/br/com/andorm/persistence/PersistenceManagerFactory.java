@@ -11,7 +11,6 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-import resources.ResourceBundleFactory;
 import br.com.andorm.AfterDelete;
 import br.com.andorm.AfterSave;
 import br.com.andorm.AfterUpdate;
@@ -37,6 +36,7 @@ import br.com.andorm.persistence.property.DateTimeProperty;
 import br.com.andorm.persistence.property.EnumeratedProperty;
 import br.com.andorm.persistence.property.PrimaryKeyProperty;
 import br.com.andorm.persistence.property.Property;
+import br.com.andorm.resources.ResourceBundleFactory;
 import br.com.andorm.types.EnumType;
 import br.com.andorm.types.TemporalType;
 

@@ -7,9 +7,11 @@ import java.util.Date;
 
 import android.test.AndroidTestCase;
 import br.com.andorm.persistence.property.BigDecimalProperty;
+import br.com.andorm.persistence.property.EnumeratedProperty;
 import br.com.andorm.persistence.property.PrimaryKeyProperty;
 import br.com.andorm.persistence.property.Property;
 import br.com.andorm.persistence.tablemanager.PropertyCreationQueryBuilder;
+import br.com.andorm.types.EnumType;
 
 public class PropertyCreationQueryBuilderTest extends AndroidTestCase {
 
@@ -82,6 +84,18 @@ public class PropertyCreationQueryBuilderTest extends AndroidTestCase {
 		assertEquals("peso REAL", returned);
 	}
 	
+	public void testBooleanProperty() {
+		@SuppressWarnings("all")
+		class TestClass {
+			Boolean active;
+		}
+		
+		Property property = new Property("active", in(TestClass.class).returnField("active"), null, null);
+		
+		String returned = builder.build(property);
+		assertEquals("active BOOL", returned);
+	}
+	
 	public void testBigDecimalProperty() {
 		@SuppressWarnings("all")
 		class TestClass {
@@ -104,6 +118,32 @@ public class PropertyCreationQueryBuilderTest extends AndroidTestCase {
 		
 		String returned = builder.build(property);
 		assertEquals("not_null_attr TEXT NOT NULL", returned);
+	}
+	
+	public void testNamedEnumProperty() {		
+		@SuppressWarnings("all")
+		class TestClass {
+			AndOrmEnum type;
+		}
+		
+		
+		Property property = new EnumeratedProperty("type", in(TestClass.class).returnField("type"), null, null, true, EnumType.Name);
+		
+		String returned = builder.build(property);
+		assertEquals("type TEXT", returned);
+	}
+	
+	public void testOrdinalEnumProperty() {		
+		@SuppressWarnings("all")
+		class TestClass {
+			AndOrmEnum type;
+		}
+		
+		
+		Property property = new EnumeratedProperty("type", in(TestClass.class).returnField("type"), null, null, true, EnumType.Ordinal);
+		
+		String returned = builder.build(property);
+		assertEquals("type INTEGER", returned);
 	}
 	
 	public void testPrimaryKeyProperty() {
@@ -130,4 +170,8 @@ public class PropertyCreationQueryBuilderTest extends AndroidTestCase {
 		assertEquals("id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL", returned);
 	}
 	
+}
+
+enum AndOrmEnum {
+	Type1, Type2
 }

@@ -18,7 +18,7 @@ public class DateTimeProperty extends Property {
 	private final TemporalType type;
 
 	public DateTimeProperty(String columnName, Field field, Method getMethod, Method setMethod, TemporalType type) {
-		super(columnName, field, getMethod, setMethod);
+		super(columnName, field, getMethod, setMethod, Long.class);
 		this.type = type;
 	}
 

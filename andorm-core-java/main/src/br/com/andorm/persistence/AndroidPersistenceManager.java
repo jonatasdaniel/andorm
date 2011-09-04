@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import resources.ResourceBundleFactory;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -21,6 +20,7 @@ import br.com.andorm.persistence.property.Property;
 import br.com.andorm.persistence.tablemanager.TableManager;
 import br.com.andorm.provider.Provider;
 import br.com.andorm.query.Criteria;
+import br.com.andorm.resources.ResourceBundleFactory;
 
 /**
  * 
@@ -66,8 +66,9 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		for(String column : cache.getColumnsWithoutAutoInc()) {
 			Property property = cache.getPropertyByColumn(column);
 			Object param = property.get(o);
-			
-			Method putMethod = this.cache.getContentValuesHelper().getMethod(property.getDatabaseFieldType());
+
+			Class<?> databaseType = property.getDatabaseFieldType();
+			Method putMethod = this.cache.getContentValuesHelper().getMethod(databaseType);
 			invoke(values, putMethod).withParams(column, param);
 		}
 		
@@ -131,7 +132,8 @@ public class AndroidPersistenceManager implements PersistenceManager {
 			Property property = cache.getPropertyByColumn(column);
 			Object param = property.get(o);
 			
-			Method putMethod = this.cache.getContentValuesHelper().getMethod(property.getDatabaseFieldType());
+			Class<?> databaseType = property.getDatabaseFieldType();
+			Method putMethod = this.cache.getContentValuesHelper().getMethod(databaseType);
 			invoke(values, putMethod).withParams(column, param);
 		}
 		

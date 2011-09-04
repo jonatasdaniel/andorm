@@ -1,6 +1,7 @@
 package br.com.andorm.example.infra.persistence;
 
 import br.com.andorm.config.AndOrmConfiguration;
+import br.com.andorm.config.EntityConfiguration;
 import br.com.andorm.example.model.entity.Cliente;
 import br.com.andorm.example.model.entity.PessoaFisica;
 import br.com.andorm.example.model.entity.PessoaJuridica;

@@ -1,16 +1,17 @@
 package br.com.andorm.persistence.tablemanager;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import resources.ResourceBundleFactory;
-
 import br.com.andorm.AndOrmException;
+import br.com.andorm.persistence.property.BooleanProperty;
 import br.com.andorm.persistence.property.PrimaryKeyProperty;
 import br.com.andorm.persistence.property.Property;
+import br.com.andorm.resources.ResourceBundleFactory;
 
 public class PropertyCreationQueryBuilder {
 
@@ -29,15 +30,20 @@ public class PropertyCreationQueryBuilder {
 		types.put(Date.class, "LONG");
 		types.put(Double.class, "REAL");
 		types.put(Float.class, "REAL");
+		types.put(BigDecimal.class, "REAL");
 		types.put(Integer.class, "INTEGER");
 		types.put(Long.class, "INTEGER");
+		types.put(Boolean.class, "BOOL");
 		
 	}
 	
 	public String build(Property property) {
 		StringBuilder builder = new StringBuilder();
 		
-		Class<?> type = property.getField().getType();
+		Class<?> type = property.getDatabaseFieldType();
+		if(property instanceof BooleanProperty) {
+			type = Boolean.class;
+		}
 		String typeName = types.get(type);
 		if(typeName == null)
 			throw new AndOrmException(MessageFormat.format(bundle.getString("type_not_supported"), type.getCanonicalName()));

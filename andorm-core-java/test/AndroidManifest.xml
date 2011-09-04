@@ -5,7 +5,7 @@
       android:versionName="1.0">
 
     <instrumentation android:targetPackage="br.com.andorm" android:name="android.test.InstrumentationTestRunner" />
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
+    <application android:icon="@drawable/icon" android:label="">
 
     <uses-library android:name="android.test.runner" />
     </application>

@@ -1,6 +1,7 @@
 package br.com.andorm.persistence;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,14 +17,14 @@ public class PersistenceManagerCache {
 	private final ContentValuesHelper contentValuesHelper;
 	private final CursorHelper cursorHelper;
 
-	protected PersistenceManagerCache() {
+	public PersistenceManagerCache() {
 		entityCaches = new HashMap<Class<?>, EntityCache>();
 
 		cursorHelper = new CursorHelper();
 		contentValuesHelper = new ContentValuesHelper();
 	}
 
-	protected void add(EntityCache cache) {
+	public void add(EntityCache cache) {
 		entityCaches.put(cache.getEntityClass(), cache);
 	}
 
@@ -37,6 +38,11 @@ public class PersistenceManagerCache {
 
 	public ContentValuesHelper getContentValuesHelper() {
 		return contentValuesHelper;
+	}
+	
+	@SuppressWarnings("all")
+	public List<Class<?>> getAllEntities() {
+		return (List<Class<?>>) entityCaches.keySet();
 	}
 
 }

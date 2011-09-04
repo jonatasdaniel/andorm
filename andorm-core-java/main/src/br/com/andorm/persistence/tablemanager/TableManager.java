@@ -34,6 +34,12 @@ public final class TableManager {
 		}
 	}
 	
+	public void createAll() {
+		for (Class<?> entityClass : cache.getAllEntities()) {
+			create(entityClass);
+		}
+	}
+	
 	public void drop(Class<?> entityClass) {
 		
 	}

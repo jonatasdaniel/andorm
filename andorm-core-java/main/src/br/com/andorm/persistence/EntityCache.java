@@ -49,13 +49,13 @@ public final class EntityCache {
 		columnsWithoutAutoInc = new ArrayList<String>();
 	}
 
-	protected void setPk(PrimaryKeyProperty pk) {
+	public void setPk(PrimaryKeyProperty pk) {
 		this.pk = pk;
 
 		add(pk);
 	}
 
-	protected void add(Property property) {
+	public void add(Property property) {
 		columns.add(property.getColumnName());
 		columnProperties.put(property.getColumnName(), property);
 		fieldProperties.put(property.getField().getName(), property);

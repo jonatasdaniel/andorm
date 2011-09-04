@@ -1,14 +1,15 @@
 package br.com.andorm.persistence.tablemanager;
 
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
-
-import resources.ResourceBundleFactory;
 
 import br.com.andorm.persistence.AndOrmPersistenceException;
 import br.com.andorm.persistence.EntityCache;
 import br.com.andorm.persistence.PersistenceManagerCache;
 import br.com.andorm.persistence.property.Property;
+import br.com.andorm.resources.ResourceBundleFactory;
 
 public class TableCreationQueryBuilder {
 
@@ -36,7 +37,10 @@ public class TableCreationQueryBuilder {
 		
 		builder.append(propertyCreationBuilder.build(cache.getPk()));
 		
-		for(String column : cache.getColumns()) {
+		List<String> columns = cache.getColumns();
+		Collections.sort(columns);
+		
+		for(String column : columns) {
 			
 			Property property = cache.getPropertyByColumn(column);
 			if(property == cache.getPk())

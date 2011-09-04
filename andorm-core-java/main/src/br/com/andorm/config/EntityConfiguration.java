@@ -3,11 +3,10 @@ package br.com.andorm.config;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import resources.ResourceBundleFactory;
-
 import br.com.andorm.AndOrmException;
 import br.com.andorm.provider.DefaultProvider;
 import br.com.andorm.provider.Provider;
+import br.com.andorm.resources.ResourceBundleFactory;
 
 public class EntityConfiguration {
 

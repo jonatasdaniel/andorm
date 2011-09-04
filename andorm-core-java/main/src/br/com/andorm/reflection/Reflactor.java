@@ -5,9 +5,8 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import resources.ResourceBundleFactory;
-
 import br.com.andorm.AndOrmException;
+import br.com.andorm.resources.ResourceBundleFactory;
 
 
 public final class Reflactor {

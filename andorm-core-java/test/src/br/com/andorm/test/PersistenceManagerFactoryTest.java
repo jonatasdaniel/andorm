@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-import resources.ResourceBundleFactory;
 import android.test.AndroidTestCase;
 import br.com.andorm.AndOrmException;
 import br.com.andorm.config.AndOrmConfiguration;
@@ -22,6 +21,7 @@ import br.com.andorm.persistence.PersistenceManagerCache;
 import br.com.andorm.persistence.PersistenceManagerFactory;
 import br.com.andorm.persistence.property.DateTimeProperty;
 import br.com.andorm.persistence.property.Property;
+import br.com.andorm.resources.ResourceBundleFactory;
 import br.com.andorm.test.entity.AnnotatedDateTimeEntity;
 import br.com.andorm.test.entity.DateTimeEntity;
 import br.com.andorm.test.entity.PessoaFisica;

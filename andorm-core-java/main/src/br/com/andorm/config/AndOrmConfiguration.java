@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import resources.ResourceBundleFactory;
 import br.com.andorm.AndOrmException;
+import br.com.andorm.resources.ResourceBundleFactory;
 
 /**
  * 

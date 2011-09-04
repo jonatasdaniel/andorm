@@ -32,6 +32,11 @@ public class Property {
 	}
 
 	public Property(String columnName, Field field, Method getMethod,
+			Method setMethod, Class<?> databaseFieldType) {
+		this(columnName, field, getMethod, setMethod, false, databaseFieldType);
+	}
+	
+	public Property(String columnName, Field field, Method getMethod,
 			Method setMethod, boolean nullable, Class<?> databaseFieldType) {
 		this.columnName = columnName;
 		this.field = field;
