@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import br.com.andorm.AndOrmException;
-import br.com.andorm.persistence.property.BooleanProperty;
-import br.com.andorm.persistence.property.PrimaryKeyProperty;
-import br.com.andorm.persistence.property.Property;
+import br.com.andorm.property.BooleanProperty;
+import br.com.andorm.property.PrimaryKeyProperty;
+import br.com.andorm.property.Property;
 import br.com.andorm.resources.ResourceBundleFactory;
 
 public class PropertyCreationQueryBuilder {

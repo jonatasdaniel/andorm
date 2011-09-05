@@ -6,11 +6,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import android.test.AndroidTestCase;
-import br.com.andorm.persistence.property.BigDecimalProperty;
-import br.com.andorm.persistence.property.EnumeratedProperty;
-import br.com.andorm.persistence.property.PrimaryKeyProperty;
-import br.com.andorm.persistence.property.Property;
 import br.com.andorm.persistence.tablemanager.PropertyCreationQueryBuilder;
+import br.com.andorm.property.BigDecimalProperty;
+import br.com.andorm.property.EnumeratedProperty;
+import br.com.andorm.property.PrimaryKeyProperty;
+import br.com.andorm.property.Property;
 import br.com.andorm.types.EnumType;
 
 public class PropertyCreationQueryBuilderTest extends AndroidTestCase {

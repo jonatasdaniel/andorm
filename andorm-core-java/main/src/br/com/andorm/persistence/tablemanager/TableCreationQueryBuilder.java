@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 import br.com.andorm.persistence.AndOrmPersistenceException;
 import br.com.andorm.persistence.EntityCache;
 import br.com.andorm.persistence.PersistenceManagerCache;
-import br.com.andorm.persistence.property.Property;
+import br.com.andorm.property.Property;
 import br.com.andorm.resources.ResourceBundleFactory;
 
 public class TableCreationQueryBuilder {

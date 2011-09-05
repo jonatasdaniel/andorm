@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 
 import android.test.AndroidTestCase;
 import br.com.andorm.AndOrmException;
+import br.com.andorm.Entity;
+import br.com.andorm.NameType;
 import br.com.andorm.config.AndOrmConfiguration;
 import br.com.andorm.config.EntityConfiguration;
 import br.com.andorm.config.NameTypes;
@@ -19,8 +21,8 @@ import br.com.andorm.persistence.EntityCache;
 import br.com.andorm.persistence.PersistenceManager;
 import br.com.andorm.persistence.PersistenceManagerCache;
 import br.com.andorm.persistence.PersistenceManagerFactory;
-import br.com.andorm.persistence.property.DateTimeProperty;
-import br.com.andorm.persistence.property.Property;
+import br.com.andorm.property.DateTimeProperty;
+import br.com.andorm.property.Property;
 import br.com.andorm.resources.ResourceBundleFactory;
 import br.com.andorm.test.entity.AnnotatedDateTimeEntity;
 import br.com.andorm.test.entity.DateTimeEntity;
@@ -111,14 +113,14 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 
 	public void testShouldHaveOriginalNameTypes() {
 		AndOrmConfiguration conf = new AndOrmConfiguration("path");
-		conf.addEntity(new EntityConfiguration(PessoaFisica.class, NameTypes.Original));
+		conf.addEntity(new EntityConfiguration(PessoaFisica.class));
 
 		PersistenceManager manager = PersistenceManagerFactory.create(conf);
 		Field cacheField = in(AndroidPersistenceManager.class).returnField(
 				"cache");
 		PersistenceManagerCache managerCache = (PersistenceManagerCache) getFieldValue(
 				manager, cacheField);
-		EntityCache cache = managerCache.getEntityCache(PessoaFisica.class);
+		EntityCache cache = managerCache.getEntityCache(OriginalNameTypeEntity.class);
 
 		Property data = (Property) cache.getPropertyByField("dataCadastro");
 		assertEquals(data.getColumnName(), "dataCadastro");
@@ -126,7 +128,7 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 
 	public void testShouldHaveUnderscoredNameTypes() {
 		AndOrmConfiguration conf = new AndOrmConfiguration("path");
-		conf.addEntity(new EntityConfiguration(PessoaFisica.class, NameTypes.Underscored));
+		conf.addEntity(new EntityConfiguration(UnderscoredNameTypeEntity.class));
 
 		PersistenceManager manager = PersistenceManagerFactory.create(conf);
 		Field cacheField = in(AndroidPersistenceManager.class).returnField(
@@ -152,4 +154,32 @@ public class PersistenceManagerFactoryTest extends AndroidTestCase {
 		}
 	}
 
+}
+
+@Entity
+@NameType(NameTypes.Original)
+class OriginalNameTypeEntity {
+	Date dataCadastro;
+
+	public Date getDataCadastro() {
+		return dataCadastro;
+	}
+
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}
+}
+
+@Entity
+@NameType(NameTypes.Underscored)
+class UnderscoredNameTypeEntity {
+	Date dataCadastro;
+
+	public Date getDataCadastro() {
+		return dataCadastro;
+	}
+
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}
 }

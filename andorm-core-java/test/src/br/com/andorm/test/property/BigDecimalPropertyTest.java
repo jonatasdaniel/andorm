@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 import android.test.AndroidTestCase;
-import br.com.andorm.persistence.property.BigDecimalProperty;
+import br.com.andorm.property.BigDecimalProperty;
 
 public class BigDecimalPropertyTest extends AndroidTestCase {
 

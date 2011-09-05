@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import android.test.AndroidTestCase;
-import br.com.andorm.persistence.property.EnumeratedProperty;
+import br.com.andorm.property.EnumeratedProperty;
 import br.com.andorm.types.EnumType;
 
 public class EnumeratedPropertyTest extends AndroidTestCase {

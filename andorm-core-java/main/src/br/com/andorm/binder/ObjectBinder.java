@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import android.database.Cursor;
 import br.com.andorm.persistence.CursorHelper;
 import br.com.andorm.persistence.EntityCache;
-import br.com.andorm.persistence.property.Property;
+import br.com.andorm.property.Property;
 
 import static br.com.andorm.reflection.Reflactor.*;
 

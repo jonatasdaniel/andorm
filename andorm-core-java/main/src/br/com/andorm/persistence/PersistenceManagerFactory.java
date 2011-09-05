@@ -24,18 +24,22 @@ import br.com.andorm.DateTime;
 import br.com.andorm.Entity;
 import br.com.andorm.Enumerated;
 import br.com.andorm.MappedSuperClass;
+import br.com.andorm.NameType;
 import br.com.andorm.PrimaryKey;
 import br.com.andorm.Table;
 import br.com.andorm.Transient;
 import br.com.andorm.config.AndOrmConfiguration;
 import br.com.andorm.config.EntityConfiguration;
 import br.com.andorm.config.NameTypes;
-import br.com.andorm.persistence.property.BigDecimalProperty;
-import br.com.andorm.persistence.property.BooleanProperty;
-import br.com.andorm.persistence.property.DateTimeProperty;
-import br.com.andorm.persistence.property.EnumeratedProperty;
-import br.com.andorm.persistence.property.PrimaryKeyProperty;
-import br.com.andorm.persistence.property.Property;
+import br.com.andorm.property.BigDecimalProperty;
+import br.com.andorm.property.BooleanProperty;
+import br.com.andorm.property.DateTimeProperty;
+import br.com.andorm.property.EnumeratedProperty;
+import br.com.andorm.property.PrimaryKeyProperty;
+import br.com.andorm.property.Property;
+import br.com.andorm.provider.DefaultProvider;
+import br.com.andorm.provider.Provider;
+import br.com.andorm.reflection.Reflactor;
 import br.com.andorm.resources.ResourceBundleFactory;
 import br.com.andorm.types.EnumType;
 import br.com.andorm.types.TemporalType;
@@ -60,10 +64,18 @@ public final class PersistenceManagerFactory {
 		for(EntityConfiguration conf : configuration.getEntityConfigurations()) {
 			Class<?> clazz = conf.getEntityClass();
 			
+			Class<? extends Provider> providerClass = DefaultProvider.class;
+			if(clazz.isAnnotationPresent(br.com.andorm.Provider.class)) {
+				providerClass = clazz.getAnnotation(br.com.andorm.Provider.class).value(); 
+			}
+			
 			if(!clazz.isAnnotationPresent(Entity.class))
 				throw new AndOrmException(MessageFormat.format(bundle.getString("is_not_a_entity"), clazz.getName()));
 			
-			NameTypes nameTypes = conf.getNameTypes();
+			NameTypes nameTypes = NameTypes.Underscored;
+			if(clazz.isAnnotationPresent(NameType.class)) {
+				nameTypes = clazz.getAnnotation(NameType.class).value();
+			}
 			
 			String tableName = null;
 			if(clazz.isAnnotationPresent(Table.class)) {
@@ -76,9 +88,10 @@ public final class PersistenceManagerFactory {
 				}
 			}
 			
-			EntityCache cache = new EntityCache(clazz, tableName, conf.getProvider());
+			Provider provider = Reflactor.newInstance(providerClass);
+			EntityCache cache = new EntityCache(clazz, tableName, provider);
 			
-			reflectClass(clazz, cache, conf);
+			reflectClass(clazz, cache, conf, nameTypes);
 			
 			if(cache.getPk() == null)
 				throw new AndOrmException(MessageFormat.format(bundle.getString("has_not_a_pk"), clazz.getName()));
@@ -91,9 +104,9 @@ public final class PersistenceManagerFactory {
 		return manager;
 	}
 	
-	private static void reflectClass(Class<?> clazz, EntityCache cache, EntityConfiguration configuration) {
+	private static void reflectClass(Class<?> clazz, EntityCache cache, EntityConfiguration configuration, NameTypes nameType) {
 		if(clazz.getSuperclass().isAnnotationPresent(MappedSuperClass.class)) {
-			reflectClass(clazz.getSuperclass(), cache, configuration);
+			reflectClass(clazz.getSuperclass(), cache, configuration, nameType);
 		}
 		
 		for(Field field : clazz.getDeclaredFields()) {
@@ -115,7 +128,7 @@ public final class PersistenceManagerFactory {
 			} 
 			
 			if(column == null || columnName == null) {
-				if(configuration.getNameTypes() == NameTypes.Underscored) {
+				if(nameType == NameTypes.Underscored) {
 					columnName = toUnderscoreLowerCase(field.getName());
 				} else {
 					columnName = field.getName();

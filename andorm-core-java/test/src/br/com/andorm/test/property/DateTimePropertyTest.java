@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import android.test.AndroidTestCase;
-import br.com.andorm.persistence.property.DateTimeProperty;
+import br.com.andorm.property.DateTimeProperty;
 import br.com.andorm.types.TemporalType;
 
 public class DateTimePropertyTest extends AndroidTestCase {
