@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import br.com.andorm.types.EnumType;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.TYPE})
+@Target(ElementType.FIELD)
 public @interface Enumerated {
 
 	EnumType type() default EnumType.Ordinal;

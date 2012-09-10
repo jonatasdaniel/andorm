@@ -1,12 +1,12 @@
 package br.com.andorm.provider;
 
-import br.com.andorm.reflection.Reflactor;
+import br.com.andorm.reflection.Reflection;
 
 public class DefaultProvider implements Provider {
 
 	@Override
-	public <T> T newInstanceOf(Class<T> clazz) {
-		return Reflactor.newInstance(clazz);
+	public <T> T newInstance(Class<T> of) {
+		return Reflection.newInstance(of);
 	}
 
 }

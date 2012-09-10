@@ -5,16 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * 
- * @author jonatasdaniel
- * @since 03/02/2011
- * @version 0.1
- *
- */
-
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.TYPE})
+@Target(ElementType.FIELD)
 public @interface PrimaryKey {
+
+	boolean autoInc() default true;
 	
 }

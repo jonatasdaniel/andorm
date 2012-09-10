@@ -7,18 +7,10 @@ import java.lang.annotation.Target;
 
 import br.com.andorm.types.TemporalType;
 
-/**
- * 
- * @author jonatasdaniel
- * @since 09/04/2011
- * @version 0.9
- *
- */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface DateTime {
 
-	TemporalType type() default TemporalType.Date;
+	TemporalType type() default TemporalType.DateTime;
 	
 }

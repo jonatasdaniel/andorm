@@ -1,18 +1,32 @@
 package br.com.andorm.resources;
 
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+public class ResourceBundleFactory {
 
-public final class ResourceBundleFactory {
+	private static ResourceBundleFactory instance;
 	
-	private static ResourceBundle bundle;
+	private ResourceBundle bundle;
 	
-	private ResourceBundleFactory() {}
+	private ResourceBundleFactory() {
+		bundle = ResourceBundle.getBundle("br.com.andorm.resources.messages");
+	}
 	
-	public static ResourceBundle get() {
-		if(bundle == null)
-			bundle = ResourceBundle.getBundle("br/com/andorm/resources/messages");
-		return bundle;
+	public static ResourceBundleFactory get() {
+		if(instance == null) {
+			instance = new ResourceBundleFactory();
+		}
+		
+		return instance;
+	}
+	
+	public String getString(String key) {
+		return bundle.getString(key);
+	}
+	
+	public String getString(String key, Object... args) {
+		return MessageFormat.format(bundle.getString(key), args);
 	}
 	
 }
