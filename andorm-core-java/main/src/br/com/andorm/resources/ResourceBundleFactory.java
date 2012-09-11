@@ -3,6 +3,11 @@ package br.com.andorm.resources;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class ResourceBundleFactory {
 
 	private static ResourceBundleFactory instance;

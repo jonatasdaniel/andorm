@@ -5,6 +5,11 @@ import java.util.List;
 import br.com.andorm.cache.PersistenceManagerCache;
 import br.com.andorm.query.Criteria;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class SQLitePersistenceManager implements PersistenceManager {
 
 	private final PersistenceManagerCache cache;

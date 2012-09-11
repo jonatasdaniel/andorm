@@ -1,5 +1,10 @@
 package br.com.andorm.config;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class EntityConfig {
 
 	private final Class<?> entityClass;

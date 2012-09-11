@@ -5,6 +5,11 @@ import java.lang.reflect.Field;
 import br.com.andorm.exception.AndOrmReflectionException;
 import br.com.andorm.resources.ResourceBundleFactory;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class FieldWriter {
 
 	private final Field field;

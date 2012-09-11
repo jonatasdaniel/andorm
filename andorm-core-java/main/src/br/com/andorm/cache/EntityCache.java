@@ -9,6 +9,11 @@ import br.com.andorm.property.FieldProperty;
 import br.com.andorm.property.PrimaryKeyFieldProperty;
 import br.com.andorm.provider.Provider;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class EntityCache {
 
 	private final Class<?> entityClass;
@@ -24,7 +29,7 @@ public class EntityCache {
 		this.entityClass = klass;
 		this.tableName = tableName;
 		this.provider = provider;
-
+		
 		columns = new ArrayList<String>();
 		columnsWithoutAutoInc = new ArrayList<String>();
 		columnsToProperties = new HashMap<String, FieldProperty>();

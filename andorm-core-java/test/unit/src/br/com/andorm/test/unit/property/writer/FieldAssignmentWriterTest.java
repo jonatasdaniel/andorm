@@ -12,6 +12,11 @@ import br.com.andorm.reflection.Reflection;
 import br.com.andorm.resources.ResourceBundleFactory;
 import br.com.andorm.test.unit.property.PropertyTest;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class FieldAssignmentWriterTest extends PropertyTest {
 
 	private PropertyWriter writer = new FieldAssignmentWriter();

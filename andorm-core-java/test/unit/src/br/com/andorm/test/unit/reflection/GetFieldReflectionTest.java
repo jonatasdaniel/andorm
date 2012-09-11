@@ -9,6 +9,11 @@ import br.com.andorm.exception.AndOrmReflectionException;
 import br.com.andorm.reflection.Reflection;
 import br.com.andorm.resources.ResourceBundleFactory;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class GetFieldReflectionTest extends ReflectionTest {
 	
 	@Test(expected=AndOrmReflectionException.class)

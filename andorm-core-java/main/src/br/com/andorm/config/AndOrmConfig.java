@@ -3,6 +3,11 @@ package br.com.andorm.config;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class AndOrmConfig {
 
 	private final String databasePath;

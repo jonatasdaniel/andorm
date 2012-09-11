@@ -1,29 +1,26 @@
 package br.com.andorm.types;
 
-import java.lang.reflect.Method;
+import br.com.andorm.formatter.DefaultTextFormatter;
+import br.com.andorm.formatter.TextFormatter;
+import br.com.andorm.formatter.UnderscoredLowerCaseTextFormatter;
 
-import br.com.andorm.reflection.Reflection;
-import br.com.andorm.utils.NameResolver;
-
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public enum TextFormat {
 
-	Normal(Reflection.findMethod("toDefaultFormat", NameResolver.class).withArgs(String.class), NameResolver.class),
-	Underscored(Reflection.findMethod("toUnderscoreLowerCase", NameResolver.class).withArgs(String.class), NameResolver.class);
+	Normal(new DefaultTextFormatter()),
+	Underscored(new UnderscoredLowerCaseTextFormatter());
 	
-	private Method formatter;
-	private Object executeIn;
+	private TextFormatter formatter;
 	
-	private TextFormat(Method formatter, Object executeIn) {
+	private TextFormat(TextFormatter formatter) {
 		this.formatter = formatter;
-		this.executeIn = executeIn;
 	}
 	
 	public String format(String text) {
-		Object result = Reflection.execute(formatter, executeIn).withArgs(text);
-		if(result != null) {
-			return (String) result;
-		} else {
-			return null;
-		}
+		return formatter.format(text);
 	}
 }

@@ -2,6 +2,11 @@ package br.com.andorm.reflection;
 
 import java.lang.reflect.Method;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class MethodFinder {
 
 	private final String methodName;

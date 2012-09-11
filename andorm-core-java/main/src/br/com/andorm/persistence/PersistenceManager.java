@@ -4,6 +4,11 @@ import java.util.List;
 
 import br.com.andorm.query.Criteria;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public interface PersistenceManager {
 
 	void save(Object entity);

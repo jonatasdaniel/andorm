@@ -7,6 +7,11 @@ import br.com.andorm.property.reader.PropertyReader;
 import br.com.andorm.property.writer.FieldAssignmentWriter;
 import br.com.andorm.property.writer.PropertyWriter;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class FieldProperty {
 
 	private final String columnName;

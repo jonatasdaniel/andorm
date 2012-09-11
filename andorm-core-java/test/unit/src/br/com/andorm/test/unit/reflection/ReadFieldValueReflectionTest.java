@@ -7,6 +7,11 @@ import org.junit.Test;
 import junit.framework.Assert;
 import br.com.andorm.reflection.Reflection;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class ReadFieldValueReflectionTest extends ReflectionTest {
 
 	@Test

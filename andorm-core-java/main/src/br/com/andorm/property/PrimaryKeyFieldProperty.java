@@ -5,6 +5,11 @@ import java.lang.reflect.Field;
 import br.com.andorm.property.reader.PropertyReader;
 import br.com.andorm.property.writer.PropertyWriter;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class PrimaryKeyFieldProperty extends FieldProperty {
 
 	private final boolean autoInc;

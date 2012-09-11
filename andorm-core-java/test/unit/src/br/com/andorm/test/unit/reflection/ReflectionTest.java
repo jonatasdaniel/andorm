@@ -1,6 +1,10 @@
 package br.com.andorm.test.unit.reflection;
 
-
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public abstract class ReflectionTest {
 
 	public static class Klass {

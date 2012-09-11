@@ -4,6 +4,11 @@ import java.lang.reflect.Field;
 
 import br.com.andorm.reflection.Reflection;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class FieldAssignmentWriter implements PropertyWriter {
 
 	@Override

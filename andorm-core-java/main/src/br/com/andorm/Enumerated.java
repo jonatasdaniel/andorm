@@ -7,6 +7,11 @@ import java.lang.annotation.Target;
 
 import br.com.andorm.types.EnumType;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Enumerated {

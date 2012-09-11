@@ -1,5 +1,10 @@
 package br.com.andorm.types;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public enum TemporalType {
 
 	Date("dd/MM/yyyy"),

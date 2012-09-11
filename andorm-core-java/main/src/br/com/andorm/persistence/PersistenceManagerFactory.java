@@ -11,9 +11,17 @@ import br.com.andorm.config.EntityConfig;
 import br.com.andorm.property.FieldProperty;
 import br.com.andorm.property.FieldPropertyFactory;
 import br.com.andorm.property.PrimaryKeyFieldProperty;
+import br.com.andorm.property.reader.PropertyReader;
+import br.com.andorm.property.writer.PropertyWriter;
 import br.com.andorm.provider.Provider;
 import br.com.andorm.reflection.Reflection;
+import br.com.andorm.types.TextFormat;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class PersistenceManagerFactory {
 
 	private final AndOrmConfig config;
@@ -50,12 +58,17 @@ public class PersistenceManagerFactory {
 			tableName = entityClass.getAnnotation(Table.class).value();
 		}
 		
+		Entity entity = entityClass.getAnnotation(Entity.class);
+		PropertyWriter writer = Reflection.newInstance(entity.propertyWriter());
+		PropertyReader reader = Reflection.newInstance(entity.propertyReader());
+		TextFormat textFormat = entity.textFormat();
+		
 		Provider provider = Reflection.newInstance(entityClass.getAnnotation(Entity.class).provider());
 		EntityCache cache = new EntityCache(entityClass, tableName, provider);
 		
 		FieldPropertyFactory fieldPropertyFactory = new FieldPropertyFactory();
 		for(Field field : entityClass.getDeclaredFields()) {
-			FieldProperty property = fieldPropertyFactory.create(field);
+			FieldProperty property = fieldPropertyFactory.create(writer, reader, textFormat, field);
 			if(property instanceof PrimaryKeyFieldProperty) {
 				cache.setPk((PrimaryKeyFieldProperty)property);
 			} else {

@@ -6,6 +6,11 @@ import java.lang.reflect.Method;
 import br.com.andorm.exception.AndOrmReflectionException;
 import br.com.andorm.resources.ResourceBundleFactory;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class MethodExecuter {
 
 	private final Method method;

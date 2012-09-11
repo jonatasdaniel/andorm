@@ -5,6 +5,11 @@ import java.lang.reflect.Method;
 
 import br.com.andorm.reflection.Reflection;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class SetMethodWriter implements PropertyWriter {
 
 	private Method setMethod;

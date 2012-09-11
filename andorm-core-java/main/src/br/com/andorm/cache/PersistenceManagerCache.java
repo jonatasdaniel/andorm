@@ -3,6 +3,11 @@ package br.com.andorm.cache;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class PersistenceManagerCache {
 
 	private final Map<Class<?>, EntityCache> entities;

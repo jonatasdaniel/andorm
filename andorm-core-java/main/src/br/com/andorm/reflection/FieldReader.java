@@ -2,6 +2,11 @@ package br.com.andorm.reflection;
 
 import java.lang.reflect.Field;
 
+/**
+ * 
+ * @author jonatas-daniel
+ *
+ */
 public class FieldReader {
 
 	private final Field field;
