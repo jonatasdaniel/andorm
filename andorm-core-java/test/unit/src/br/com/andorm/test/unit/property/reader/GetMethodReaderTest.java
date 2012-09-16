@@ -8,14 +8,14 @@ import org.junit.Test;
 import br.com.andorm.property.reader.GetMethodReader;
 import br.com.andorm.property.reader.PropertyReader;
 import br.com.andorm.reflection.Reflection;
-import br.com.andorm.test.unit.property.PropertyTest;
+import br.com.andorm.test.unit.property.PropertyAcessorTest;
 
 /**
  * 
  * @author jonatas-daniel
  *
  */
-public class GetMethodReaderTest extends PropertyTest {
+public class GetMethodReaderTest extends PropertyAcessorTest {
 	
 	private PropertyReader reader = new GetMethodReader(); 
 	

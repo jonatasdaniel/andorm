@@ -10,14 +10,14 @@ import br.com.andorm.property.writer.FieldAssignmentWriter;
 import br.com.andorm.property.writer.PropertyWriter;
 import br.com.andorm.reflection.Reflection;
 import br.com.andorm.resources.ResourceBundleFactory;
-import br.com.andorm.test.unit.property.PropertyTest;
+import br.com.andorm.test.unit.property.PropertyAcessorTest;
 
 /**
  * 
  * @author jonatas-daniel
  *
  */
-public class FieldAssignmentWriterTest extends PropertyTest {
+public class FieldAssignmentWriterTest extends PropertyAcessorTest {
 
 	private PropertyWriter writer = new FieldAssignmentWriter();
 	

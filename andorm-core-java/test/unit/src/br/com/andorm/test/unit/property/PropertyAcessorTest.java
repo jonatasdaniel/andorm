@@ -5,7 +5,7 @@ package br.com.andorm.test.unit.property;
  * @author jonatas-daniel
  *
  */
-public class PropertyTest {
+public class PropertyAcessorTest {
 
 	public static class Klass {
 		private Integer integerValue;

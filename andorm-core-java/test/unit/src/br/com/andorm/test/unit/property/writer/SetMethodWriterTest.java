@@ -10,14 +10,14 @@ import br.com.andorm.property.writer.PropertyWriter;
 import br.com.andorm.property.writer.SetMethodWriter;
 import br.com.andorm.reflection.Reflection;
 import br.com.andorm.resources.ResourceBundleFactory;
-import br.com.andorm.test.unit.property.PropertyTest;
+import br.com.andorm.test.unit.property.PropertyAcessorTest;
 
 /**
  * 
  * @author jonatas-daniel
  *
  */
-public class SetMethodWriterTest extends PropertyTest {
+public class SetMethodWriterTest extends PropertyAcessorTest {
 	
 	private PropertyWriter writer = new SetMethodWriter(); 
 	
