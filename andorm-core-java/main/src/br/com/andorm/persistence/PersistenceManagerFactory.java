@@ -11,6 +11,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import android.content.Context;
 import br.com.andorm.AfterDelete;
 import br.com.andorm.AfterSave;
 import br.com.andorm.AfterUpdate;
@@ -50,15 +51,33 @@ import br.com.andorm.types.TemporalType;
  * @since 18/02/2011
  * @version 0.1
  *
+ * @author tiago.emerick
+ * @modified 07/01/2013
+ * @version 0.2
+ * @changes
+ * 		create method createPMDatabaseAndTablesIfNotExists.
+ * 		Pass context to AndroidPersistenceManager to create database and tables if doesn't exists yet
+ * 
  */
 public final class PersistenceManagerFactory {
 	
 	private final static ResourceBundle bundle = ResourceBundleFactory.get();
 	
+	private static AndroidPersistenceManager manager;
+	
 	private PersistenceManagerFactory() {}
 	
+	public static PersistenceManager createPMDatabaseAndTablesIfNotExists(AndOrmConfiguration configuration, Context context) {
+		manager = new AndroidPersistenceManager(configuration.getDatabasePath(), context);
+		
+		return create(configuration);
+	}
+	
 	public static PersistenceManager create(AndOrmConfiguration configuration) {
-		AndroidPersistenceManager manager = new AndroidPersistenceManager(configuration.getDatabasePath());
+		if (manager == null) {
+			manager = new AndroidPersistenceManager(configuration.getDatabasePath());
+		}
+		
 		PersistenceManagerCache persistenceManagerCache = new PersistenceManagerCache();
 		
 		for(EntityConfiguration conf : configuration.getEntityConfigurations()) {

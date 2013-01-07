@@ -1,5 +1,6 @@
 package br.com.andorm.persistence;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,10 @@ import java.util.Map;
  * @author jonatasdaniel
  * @since 04/03/2011
  * @version 0.1
+ * 
+ * @author tiago.emerick
+ * @modified: 07/01/2013
+ * @version 0.2
  * 
  */
 public class PersistenceManagerCache {
@@ -42,7 +47,8 @@ public class PersistenceManagerCache {
 	
 	@SuppressWarnings("all")
 	public List<Class<?>> getAllEntities() {
-		return (List<Class<?>>) entityCaches.keySet();
+		List<Class<?>> entityClasses = new ArrayList<Class<?>>(entityCaches.keySet());
+		return entityClasses;
 	}
 
 }

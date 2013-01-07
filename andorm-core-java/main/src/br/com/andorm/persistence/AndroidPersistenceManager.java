@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,7 +28,14 @@ import br.com.andorm.resources.ResourceBundleFactory;
  * @author jonatasdaniel
  * @since 18/02/2011
  * @version 0.1
- *
+ * 
+ * @author tiago.emerick
+ * @modified 07/01/2013
+ * @version 0.2
+ * @changes
+ * 		On open() method try to open or create database. 
+ * 		If it fails, call SQLiteHelper with standard SQLiteOpenHelper to create database and tables creation.
+ * 		For some reason, SQLiteDatabase.openOrCreateDatabase is not creating the database.
  */
 public class AndroidPersistenceManager implements PersistenceManager {
 
@@ -35,6 +43,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	private SQLiteDatabase			database;
 	private Transaction				transaction;
 	private PersistenceManagerCache	cache;
+	private Context 				context;
 
 	private final ResourceBundle	bundle	= ResourceBundleFactory.get();
 
@@ -42,9 +51,24 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		this.databasePath = databasePath;
 	}
 	
+	public AndroidPersistenceManager(String databasePath, Context context) {
+		this.databasePath = databasePath;
+		this.context = context;
+	}
+	
 	@Override
 	public void open() {
-		database = SQLiteDatabase.openOrCreateDatabase(databasePath, null);
+		try {
+			database = SQLiteDatabase.openOrCreateDatabase(databasePath, null);
+		} catch (SQLiteException s) {
+			// could not create database. 
+			if (this.context != null) {
+				// default implementation method to create database and tables
+				database = new SQLiteHelper(this.context, databasePath, cache).getWritableDatabase();
+			} else {
+				s.printStackTrace();
+			}
+		}
 	}
 
 	@Override
