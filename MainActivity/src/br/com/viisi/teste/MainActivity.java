@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
 		public void onClick(View v) {
 			PessoaDao pdao = new PessoaDao(PMFactory.get(getApplicationContext()));
 
-			List<Pessoa> pessoas = pdao.findAll();
+			List<Pessoa> pessoas = pdao.findByNome("nome");
 			for (Pessoa pessoa : pessoas) {
 				System.out.println("Id: " + pessoa.getId() + " - Nome: " + pessoa.getNome() + " - Endereço: " + pessoa.getEndereco());
 			}
