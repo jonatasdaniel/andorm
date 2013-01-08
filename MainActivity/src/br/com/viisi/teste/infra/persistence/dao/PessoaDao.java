@@ -1,11 +1,10 @@
 package br.com.viisi.teste.infra.persistence.dao;
 
-import static br.com.andorm.query.Restriction.like;
-
 import java.util.List;
 
 import br.com.andorm.persistence.PersistenceManager;
 import br.com.andorm.query.Criteria;
+import br.com.andorm.query.Restriction;
 import br.com.viisi.teste.model.Pessoa;
 
 public class PessoaDao {
@@ -40,7 +39,7 @@ public class PessoaDao {
 	}
 
 	public List<Pessoa> findByNome(String nome) {
-		Criteria query = Criteria.from(Pessoa.class).where(like("nome", nome));
+		Criteria query = Criteria.from(Pessoa.class).where(Restriction.like("nome", "%" + nome + "%"));
 
 		return manager.find(Pessoa.class, query);
 	}
