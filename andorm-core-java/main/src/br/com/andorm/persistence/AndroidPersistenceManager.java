@@ -48,7 +48,7 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	private final ResourceBundle	bundle	= ResourceBundleFactory.get();
 
 	public AndroidPersistenceManager(String databasePath) {
-		this.databasePath = databasePath;
+		this(databasePath, null);
 	}
 	
 	public AndroidPersistenceManager(String databasePath, Context context) {
