@@ -204,12 +204,14 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		Provider provider = cache.getProvider();
 		ObjectBinder binder = new ObjectBinder(this.cache.getCursorHelper(), cache, cursor);
+		T object = null;
 		if(cursor.moveToFirst()) {
-			T object = provider.newInstanceOf(entityClass);
+			object = provider.newInstanceOf(entityClass);
 			binder.bind(object);
-			return object;
-		} else
-			return null;
+		}
+		close();
+		
+		return object;
 	}
 	
 	protected void setCache(PersistenceManagerCache cache) {
@@ -312,12 +314,14 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		Provider provider = cache.getProvider();
 		ObjectBinder binder = new ObjectBinder(this.cache.getCursorHelper(), cache, cursor);
+		T object = null;
 		if(cursor.moveToFirst()) {
-			T object = provider.newInstanceOf(of);
+			object = provider.newInstanceOf(of);
 			binder.bind(object);
-			return object;
-		} else
-			return null;
+		}
+		close();
+		
+		return object;
 	}
 
 	@Override
@@ -338,12 +342,14 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		Provider provider = cache.getProvider();
 		ObjectBinder binder = new ObjectBinder(this.cache.getCursorHelper(), cache, cursor);
+		T object = null;
 		if(cursor.moveToLast()) {
-			T object = provider.newInstanceOf(of);
+			object = provider.newInstanceOf(of);
 			binder.bind(object);
-			return object;
-		} else
-			return null;
+		}
+		close();
+		
+		return object;
 	}
 
 	@Override
