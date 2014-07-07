@@ -59,15 +59,14 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	@Override
 	public void open() {
 		try {
-			database = SQLiteDatabase.openOrCreateDatabase(databasePath, null);
-		} catch (SQLiteException s) {
-			// could not create database. 
 			if (this.context != null) {
 				// default implementation method to create database and tables
 				database = new SQLiteHelper(this.context, databasePath, cache).getWritableDatabase();
-			} else {
-				s.printStackTrace();
+			}else{		
+				database = SQLiteDatabase.openOrCreateDatabase(databasePath, null);
 			}
+		} catch (Exception s) {
+			s.printStackTrace();
 		}
 	}
 
@@ -334,8 +333,9 @@ public class AndroidPersistenceManager implements PersistenceManager {
 
 		Cursor cursor = null;
 		String limit = "1";
+        String orderBy = cache.getPk().getColumnName()+" DESC";
 		try {
-			cursor = database.query(cache.getTableName(), null, null, null, null, null, null, limit);
+			cursor = database.query(cache.getTableName(), null, null, null, null, null, orderBy, limit);
 		} catch(SQLiteException e) {
 			throw new AndOrmPersistenceException(MessageFormat.format("read_error", of.getCanonicalName(), e.getMessage()));
 		}
