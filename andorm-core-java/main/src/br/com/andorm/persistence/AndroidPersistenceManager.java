@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,7 +28,14 @@ import br.com.andorm.resources.ResourceBundleFactory;
  * @author jonatasdaniel
  * @since 18/02/2011
  * @version 0.1
- *
+ * 
+ * @author tiago.emerick
+ * @modified 07/01/2013
+ * @version 0.2
+ * @changes
+ * 		On open() method try to open or create database. 
+ * 		If it fails, call SQLiteHelper with standard SQLiteOpenHelper to create database and tables creation.
+ * 		For some reason, SQLiteDatabase.openOrCreateDatabase is not creating the database.
  */
 public class AndroidPersistenceManager implements PersistenceManager {
 
@@ -35,16 +43,31 @@ public class AndroidPersistenceManager implements PersistenceManager {
 	private SQLiteDatabase			database;
 	private Transaction				transaction;
 	private PersistenceManagerCache	cache;
+	private Context 				context;
 
 	private final ResourceBundle	bundle	= ResourceBundleFactory.get();
 
 	public AndroidPersistenceManager(String databasePath) {
+		this(databasePath, null);
+	}
+	
+	public AndroidPersistenceManager(String databasePath, Context context) {
 		this.databasePath = databasePath;
+		this.context = context;
 	}
 	
 	@Override
 	public void open() {
-		database = SQLiteDatabase.openOrCreateDatabase(databasePath, null);
+		try {
+			if (this.context != null) {
+				// default implementation method to create database and tables
+				database = new SQLiteHelper(this.context, databasePath, cache).getWritableDatabase();
+			}else{		
+				database = SQLiteDatabase.openOrCreateDatabase(databasePath, null);
+			}
+		} catch (Exception s) {
+			s.printStackTrace();
+		}
 	}
 
 	@Override
@@ -180,12 +203,14 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		Provider provider = cache.getProvider();
 		ObjectBinder binder = new ObjectBinder(this.cache.getCursorHelper(), cache, cursor);
+		T object = null;
 		if(cursor.moveToFirst()) {
-			T object = provider.newInstanceOf(entityClass);
+			object = provider.newInstanceOf(entityClass);
 			binder.bind(object);
-			return object;
-		} else
-			return null;
+		}
+		close();
+		
+		return object;
 	}
 	
 	protected void setCache(PersistenceManagerCache cache) {
@@ -288,12 +313,14 @@ public class AndroidPersistenceManager implements PersistenceManager {
 		
 		Provider provider = cache.getProvider();
 		ObjectBinder binder = new ObjectBinder(this.cache.getCursorHelper(), cache, cursor);
+		T object = null;
 		if(cursor.moveToFirst()) {
-			T object = provider.newInstanceOf(of);
+			object = provider.newInstanceOf(of);
 			binder.bind(object);
-			return object;
-		} else
-			return null;
+		}
+		close();
+		
+		return object;
 	}
 
 	@Override
@@ -306,20 +333,23 @@ public class AndroidPersistenceManager implements PersistenceManager {
 
 		Cursor cursor = null;
 		String limit = "1";
+        String orderBy = cache.getPk().getColumnName()+" DESC";
 		try {
-			cursor = database.query(cache.getTableName(), null, null, null, null, null, null, limit);
+			cursor = database.query(cache.getTableName(), null, null, null, null, null, orderBy, limit);
 		} catch(SQLiteException e) {
 			throw new AndOrmPersistenceException(MessageFormat.format("read_error", of.getCanonicalName(), e.getMessage()));
 		}
 		
 		Provider provider = cache.getProvider();
 		ObjectBinder binder = new ObjectBinder(this.cache.getCursorHelper(), cache, cursor);
+		T object = null;
 		if(cursor.moveToLast()) {
-			T object = provider.newInstanceOf(of);
+			object = provider.newInstanceOf(of);
 			binder.bind(object);
-			return object;
-		} else
-			return null;
+		}
+		close();
+		
+		return object;
 	}
 
 	@Override

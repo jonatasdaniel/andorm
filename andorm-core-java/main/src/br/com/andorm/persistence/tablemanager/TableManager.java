@@ -42,8 +42,10 @@ public final class TableManager {
 	}
 	
 	public void createAll() {
-		for (Class<?> entityClass : cache.getAllEntities()) {
-			create(entityClass);
+		if (cache != null) {
+			for (Class<?> entityClass : cache.getAllEntities()) {
+				create(entityClass);
+			}
 		}
 	}
 	
